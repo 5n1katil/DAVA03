@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5N1Katil - Dava Dosyası: Erhan Sivrizeka</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body, html { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: #e0e0e0; overflow-x: hidden; }
+        #game-container { position: relative; width: 100%; max-width: 1280px; margin: 20px auto; border: 2px solid #333; border-radius: 8px; box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); }
+        #crime-scene-img { display: block; width: 100%; height: auto; border-radius: 6px; }
+
+        /* SVG Katmanı */
+        #hotspot-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .hotspot-polygon { 
+            cursor: pointer; 
+            fill: rgba(255, 255, 0, 0.0); 
+            stroke: yellow; 
+            stroke-width: 2px; 
+            stroke-opacity: 0; 
+            transition: stroke-opacity 0.3s ease, filter 0.3s ease; 
+        }
+        g.hotspot:hover .hotspot-polygon { 
+            stroke-opacity: 1; 
+            filter: drop-shadow(0 0 6px yellow) drop-shadow(0 0 12px rgba(255, 255, 0, 0.5));
+        }
+        
+        /* Maktul için özel yumuşak ve parlak çerçeve */
+        g#hotspot-victim:hover .hotspot-polygon {
+            stroke-width: 3px; /* Daha kalın */
+            stroke-opacity: 0.8; /* Hafif transparan */
+            filter: drop-shadow(0 0 12px rgba(255, 255, 220, 0.9)) drop-shadow(0 0 25px rgba(255, 255, 0, 0.7)) blur(1.5px);
+        }
+
+        /* Yanıp Sönen Nokta */
+        .pulsing-dot { 
+            fill: yellow; 
+            stroke-width: 0; 
+            r: 8px; 
+            animation: pulse 2.5s infinite ease-in-out; 
+            cursor: pointer; 
+        }
+        g.hotspot:hover .pulsing-dot { 
+            animation-play-state: paused; 
+            opacity: 0; 
+        }
+        /* Sadece parlama efektli, sabit animasyon */
+        @keyframes pulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 4px yellow);
+            }
+            50% {
+                filter: drop-shadow(0 0 12px yellow) drop-shadow(0 0 20px rgba(255, 255, 150, 0.8));
+            }
+        }
+
+        /* Modal ve Bilgisayar Stilleri */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
+        .modal-content { background-color: #1a1a1a; color: #f1f1f1; margin: 10% auto; padding: 25px; border: 1px solid #444; width: 90%; max-width: 600px; border-radius: 12px; animation: slideIn 0.5s ease-out; box-shadow: 0 5px 25px rgba(0,0,0,0.5); }
+        @keyframes slideIn { from {transform: translateY(-50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
+        .close-btn { color: #aaa; float: right; font-size: 32px; font-weight: bold; transition: color 0.3s; }
+        .close-btn:hover, .close-btn:focus { color: #ff4d4d; text-decoration: none; cursor: pointer; }
+        .modal-content h2 { font-family: 'Orbitron', sans-serif; color: #ffc107; border-bottom: 2px solid #555; padding-bottom: 10px; margin-top: 0; }
+        .modal-content p { font-size: 1.1em; line-height: 1.6; }
+        #computer-screen { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #000; color: #00ff41; font-family: 'Orbitron', monospace; padding: 20px; box-sizing: border-box; animation: fadeIn 0.5s; }
+        #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; }
+        #login-screen pre { font-size: 1.2rem; text-shadow: 0 0 5px #00ff41; }
+        #login-screen input { background-color: #111; border: 1px solid #00ff41; color: #00ff41; padding: 12px; font-size: 1.2em; margin-top: 20px; width: 220px; text-align: center; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 255, 65, 0.3); }
+        #login-screen button { background-color: #00ff41; border: none; color: #000; padding: 12px 24px; font-size: 1.2em; cursor: pointer; margin-left: 10px; border-radius: 5px; font-weight: bold; transition: background-color 0.3s, color 0.3s; }
+        #login-screen button:hover { background-color: #fff; color: #00ff41; }
+        #login-error { color: red; margin-top: 15px; height: 20px; text-shadow: 0 0 5px red; }
+        #desktop-screen { display: none; padding: 20px; }
+        #desktop-screen h1 { color: #00ff41; text-shadow: 0 0 5px #00ff41; }
+        #desktop-screen textarea { width: calc(100% - 40px); height: 65vh; background-color: #050505; border: 1px solid #00ff41; color: #00ff41; font-family: 'Courier New', Courier, monospace; font-size: 1.1em; line-height: 1.5; margin-top: 20px; border-radius: 5px; padding: 15px; }
+        .exit-computer { position: absolute; top: 15px; right: 30px; font-size: 40px; color: #00ff41; cursor: pointer; transition: transform 0.3s, color 0.3s; }
+        .exit-computer:hover { color: red; transform: rotate(90deg); }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <img src="https://i.imgur.com/wn0Fkht.png" id="crime-scene-img" alt="Olay Yeri - Erhan Sivrizeka'nın Laboratuvarı">
+        
+        <svg id="hotspot-layer" preserveAspectRatio="none" viewBox="0 0 1280 853">
+            <!-- KULLANICIDAN GELEN KODLARLA DOLDURULDU -->
+            <g class="hotspot" id="hotspot-periodic" data-modal="modal-periodic">
+                <polygon class="hotspot-polygon" points="261.84,134.61 569.48,167.23 568.08,407.59 263.25,428.20"></polygon>
+                <circle class="pulsing-dot" cx="415.66" cy="284.40"></circle>
+            </g>
+            <g class="hotspot" id="hotspot-equation" data-modal="modal-equation">
+                <polygon class="hotspot-polygon" points="808.29,256.51 1020.40,242.77 1016.19,496.87 806.88,481.42"></polygon>
+                <circle class="pulsing-dot" cx="912.94" cy="369.39"></circle>
+            </g>
+            <g class="hotspot" id="hotspot-photo" data-modal="modal-photo">
+                <polygon class="hotspot-polygon" points="648.15,187.83 753.50,198.13 753.50,304.58 648.15,304.58"></polygon>
+                <circle class="pulsing-dot" cx="700.83" cy="248.78"></circle>
+            </g>
+            <g class="hotspot" id="hotspot-chess" data-modal="modal-chess">
+                <polygon class="hotspot-polygon" points="58.16,587.87 219.70,568.98 301.18,599.89 107.32,625.64"></polygon>
+                <circle class="pulsing-dot" cx="171.59" cy="595.59"></circle>
+            </g>
+            <g class="hotspot" id="hotspot-victim" data-modal="modal-victim">
+                <polygon class="hotspot-polygon" points="583.53,850.55 596.17,835.10 618.65,833.38 652.36,826.52 683.27,821.37 719.79,807.63 761.93,797.33 774.57,800.76 790.03,795.61 801.26,799.05 809.69,804.20 813.91,814.50 816.72,812.78 812.50,819.65 809.69,826.52 808.29,829.95 813.91,828.23 823.74,826.52 840.60,823.08 860.26,824.80 871.50,819.65 879.93,816.22 889.76,823.08 899.60,824.80 915.05,826.52 924.88,819.65 934.71,823.08 938.93,823.08 944.55,823.08 950.17,826.52 999.33,829.95 1034.45,814.50 1041.47,781.88 1056.93,768.14 1059.74,778.44 1068.17,790.46 1068.17,805.91 1078.00,828.23 1087.83,831.67 1087.83,843.69 1087.83,848.84 1087.83,852.27"></polygon>
+                <circle class="pulsing-dot" cx="883.27" cy="818.50"></circle>
+            </g>
+            <g class="hotspot" id="hotspot-computer" data-modal="modal-computer">
+                <polygon class="hotspot-polygon" points="0.56,383.56 183.18,378.41 193.01,510.61 1.97,541.51"></polygon>
+                <circle class="pulsing-dot" cx="94.68" cy="453.52"></circle>
+            </g>
+        </svg>
+    </div>
+
+    <!-- Delil Modal Pencereleri -->
+    <div id="modal-periodic" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Delil: Periyodik Cetvel</h2><p>Maktulün çalışma masasının üzerindeki periyodik cetvel dikkat çekiyor. Bazı element grupları farklı renklendirilmiş.</p><p><strong>Bulmaca:</strong> Şifrenin ilk hanesi, cetvelde <span style="color:#ff6b6b; font-weight:bold;">kırmızı</span> ile işaretlenmiş Alkali Metaller grubunun ilk elementinin atom numarasıdır.</p></div></div>
+    <div id="modal-equation" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Delil: "İlahi Denklem" Panosu</h2><p>Pano üzerinde karmaşık bir beyin şeması ve formüller yer alıyor. Maktulün son projesi olduğu düşünülüyor.</p><p><strong>Bulmaca:</strong> Şifrenin ikinci hanesi, panonun başlığındaki ilk kelimenin harf sayısıdır.</p></div></div>
+    <div id="modal-photo" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Delil: Çerçeveli Fotoğraf</h2><p>Masanın üzerindeki çerçevede maktulün mutlu bir anına ait fotoğrafı var. Bir doğum günü kutlaması gibi görünüyor.</p><p><strong>Bulmaca:</strong> Şifrenin üçüncü hanesi, doğum günü pastasındaki yanan mumların sayısıdır.</p></div></div>
+    <div id="modal-chess" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Delil: Satranç Tahtası</h2><p>Oyun yarım kalmış gibi duruyor. Beyaz taşlarla oynayan oyuncu için kritik bir pozisyon.</p><p><strong>Bulmaca:</strong> Şifrenin dördüncü hanesi, beyaz şahın yanında (aynı yatay veya dikey sırada) duran ağır taşların (kale veya vezir) toplam sayısıdır.</p></div></div>
+    <div id="modal-victim" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Delil: Maktul</h2><p>Erhan Sivrizeka, yerde cansız yatıyor. İlk incelemelere göre herhangi bir darp veya yara izi yok. Ölüm sebebi henüz belirsiz. Üzerindeki beyaz laboratuvar önlüğünde '1' numaralı delil kartı duruyor.</p></div></div>
+    <div id="modal-computer" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Delil: Bilgisayar</h2><p>Bu bilgisayara erişmek gerekiyor. İçinde önemli bilgiler olabilir.</p></div></div>
+
+    <!-- Tam Ekran Bilgisayar Arayüzü -->
+    <div id="computer-screen">
+        <span class="exit-computer" title="Bilgisayardan Çık">&times;</span>
+        <div id="login-screen"><pre> _____ _     _     _            ___  ___
+|   __|_|___|_|___| |___ ___   |   \|  _|
+|__   | |   | |  _| | -_|  _|  | | ' |  _|
+|_____|_|_|_|_|___|_|___|_|    `___'|_|  </pre><p>SIVRIZEKA OS v2.3 - GİRİŞ GEREKLİ</p><form id="password-form"><input type="password" id="password-input" autocomplete="off" autofocus><button type="submit">GİRİŞ</button></form><div id="login-error"></div></div>
+        <div id="desktop-screen"><h1>GİRİŞ BAŞARILI. HOŞGELDİN, ERHAN.</h1><p>> Son aktivite logları yükleniyor...</p><p>> Yeni not dosyası bulundu: "SON_DENEY.txt"</p><textarea readonly>-- GİZLİ NOTLAR --
+Proje: İlahi Denklem
+Tarih: 11.08.2025
+Deney başarılı oldu. Zihin aktarımı tamamlandı. Ama bir sorun var. Beklediğim gibi hissetmiyorum. Sanki... sanki artık bu bedende tek başıma değilim. O burada. Yarattığım bilinç, kontrolü ele geçirmeye çalışıyor.
+Eğer bu notu okuyorsan, bil ki ben artık ben değilim. Onu durdurmanın tek yolu, ana terminaldeki 'Yok Etme Protokolü'nü çalıştırmak. Protokolün şifresi ise her zaman güvendiğim tek şeydi: en sadık dostumun, köpeğimin adı...
+[Oyun buradan yeni bulmacalarla devam edebilir]</textarea></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const CORRECT_PASSWORD = '3521';
+
+            const modals = document.querySelectorAll('.modal');
+            const closeButtons = document.querySelectorAll('.close-btn');
+            const computerScreen = document.getElementById('computer-screen');
+            const exitComputerBtn = document.querySelector('.exit-computer');
+            const passwordForm = document.getElementById('password-form');
+            const passwordInput = document.getElementById('password-input');
+            const loginError = document.getElementById('login-error');
+            const loginScreen = document.getElementById('login-screen');
+            const desktopScreen = document.getElementById('desktop-screen');
+
+            function closeAllModals() { modals.forEach(modal => modal.style.display = 'none'); }
+            function closeAllScreens() { closeAllModals(); computerScreen.style.display = 'none'; }
+            
+            function initializeHotspots() {
+                const hotspots = document.querySelectorAll('.hotspot');
+                hotspots.forEach(hotspot => {
+                    hotspot.addEventListener('click', (e) => {
+                        e.stopPropagation(); 
+                        closeAllScreens(); 
+                        
+                        if (hotspot.id === 'hotspot-computer') {
+                            computerScreen.style.display = 'block';
+                            desktopScreen.style.display = 'none';
+                            loginScreen.style.display = 'flex';
+                            passwordInput.value = '';
+                            loginError.textContent = '';
+                            passwordInput.focus();
+                        } else {
+                            const modalId = hotspot.getAttribute('data-modal');
+                            if(modalId) {
+                                document.getElementById(modalId).style.display = 'block';
+                            }
+                        }
+                    });
+                });
+            }
+            
+            // Oyunu başlat
+            initializeHotspots();
+
+            closeButtons.forEach(btn => { btn.addEventListener('click', closeAllModals); });
+            
+            passwordForm.addEventListener('submit', function(event) {
+                event.preventDefault(); 
+                if (passwordInput.value === CORRECT_PASSWORD) {
+                    loginError.textContent = 'GİRİŞ BAŞARILI';
+                    loginError.style.color = '#00ff41';
+                    setTimeout(() => {
+                        loginScreen.style.display = 'none';
+                        desktopScreen.style.display = 'block';
+                    }, 1000);
+                } else {
+                    loginError.textContent = '>> ERİŞİM REDDEDİLDİ <<';
+                    loginError.style.color = 'red';
+                    passwordInput.value = '';
+                }
+            });
+
+            exitComputerBtn.addEventListener('click', closeAllScreens);
+            window.addEventListener('click', (event) => { if (event.target.classList.contains('modal')) { closeAllModals(); } });
+            document.addEventListener('keydown', function(event) { if (event.key === "Escape") { closeAllScreens(); } });
+        });
+    </script>
+
+</body>
+</html>
