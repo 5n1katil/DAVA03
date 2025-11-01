@@ -183,6 +183,11 @@
             position: relative;
             line-height: 0;
         }
+        .nested-evidence-container img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
         .nested-hotspot-layer {
             position: absolute;
             top: 0;
@@ -206,9 +211,9 @@
                     blur(4px);
         }
         .nested-hotspot .pulsing-dot {
-            fill: #0d2a4c;
+            fill: #1e3a8a;
             stroke: #93c5fd;
-            stroke-width: 1px;
+            stroke-width: 1.5px;
             animation: pulseScaleGlowBlue 1.9s ease-in-out infinite;
             animation-play-state: paused;
         }
@@ -233,7 +238,6 @@
             }
         }
         /* ------------------------------------ */
-
         /* -- MASAÜSTÜ STİLLERİ -- */
         #desktop-screen {
             display: none;
@@ -664,6 +668,7 @@
                 <circle class="pulsing-dot" cx="700.83" cy="248.78"></circle>
             </g>
             <g class="hotspot" id="hotspot-chess" data-modal="modal-chess">
+            <g class="hotspot" id="hotspot-chess" data-modal="modal-chess">
                 <polygon class="hotspot-polygon" points="58.16,587.87 219.70,568.98 301.18,599.89 107.32,625.64"></polygon>
                 <circle class="pulsing-dot" cx="171.59" cy="595.59"></circle>
             </g>
@@ -688,7 +693,7 @@
             <img src="https://i.imgur.com/G0OXIXn.png" alt="Ebedi Korteks Projesi Şeması Yakın Çekim" onerror="this.src='https://placehold.co/1024x1024/1a1a1a/e0e0e0?text=Delil+Yüklenemedi';">
             
             <!-- İnteraktif SVG Katmanı -->
-            <svg class="nested-hotspot-layer" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1024 1024">
+            <svg class="nested-hotspot-layer" data-design-size="1024" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1024 1024">
                 <!-- İşlemci 1 (Sol Üst) -->
                 <g class="nested-hotspot" data-evidence-id="processor-1">
                     <rect x="110" y="112" width="230" height="230"></rect>
@@ -714,7 +719,6 @@
     </div>
     <div class="evidence-source" id="source-photo">
         <img src="https://i.imgur.com/hUdIu11.png" alt="Çerçeveli Fotoğraf Yakın Çekim" onerror="this.src='https://placehold.co/600x800/1a1a1a/e0e0e0?text=Delil+Yüklenemedi';">
-    </div>
     <div class="evidence-source" id="source-chess">
         <img src="https://i.imgur.com/Vjemgct.png" alt="Satranç Tahtası Yakın Çekim" onerror="this.src='https://placehold.co/800x400/1a1a1a/e0e0e0?text=Delil+Yüklenemedi';">
     </div>
@@ -1471,6 +1475,7 @@ Geri sayım son kez başladı…
                         // Diğer tüm içerik türleri için klonlama
                         const clonedNode = sourceElement.cloneNode(true);
                         clonedNode.style.display = 'block';
+                        clonedNode.style.display = 'block';
                         
                         while (clonedNode.firstChild) {
                             fullscreenContent.appendChild(clonedNode.firstChild);
@@ -1495,6 +1500,7 @@ Geri sayım son kez başladı…
                     if (sourceId === 'source-equation') {
                         const nestedLayer = fullscreenContent.querySelector('.nested-hotspot-layer');
                         if (nestedLayer) {
+                            syncNestedHotspotOverlay(fullscreenContent);
                             requestAnimationFrame(() => {
                                 nestedLayer.classList.add('hotspots-ready');
                             });
@@ -1520,7 +1526,6 @@ Geri sayım son kez başladı…
 
                 if (viewerHistory.length > 0) {
                     const previousState = viewerHistory[viewerHistory.length - 1];
-                    renderViewerContent(previousState.sourceId, previousState.isImageOnly, previousState.isVideo, previousState.isPdf, previousState.isDocument);
                 } else {
                     if (isDesktopViewOpen || currentOpenFolder) {
                         fullscreenViewer.classList.remove('visible');
@@ -1671,6 +1676,7 @@ Geri sayım son kez başladı…
                     // Klonlama ile eski event listener'ları temizle
                     const newIcon = icon.cloneNode(true);
                     icon.parentNode.replaceChild(newIcon, icon);
+                    icon.parentNode.replaceChild(newIcon, icon);
 
                     newIcon.addEventListener('click', (e) => {
                         e.stopPropagation();
@@ -1695,7 +1701,7 @@ Geri sayım son kez başladı…
             // DELİL İÇİ HOTSPOT'LAR
             function attachNestedHotspotListeners(container) {
                 if (!container) return;
-                
+
                 // Tıklama olayını en dış sarmalayıcıya (container) ekle
                 container.addEventListener('click', (e) => {
                     // Tıklanan elementin `.nested-hotspot` veya onun bir alt elementi olup olmadığını kontrol et
@@ -1709,6 +1715,79 @@ Geri sayım son kez başladı…
                         }
                     }
                 });
+            }
+
+
+            function syncNestedHotspotOverlay(container) {
+                if (!container) return;
+
+                const nestedContainer = container.querySelector('.nested-evidence-container');
+                if (!nestedContainer) return;
+
+                const boardImage = nestedContainer.querySelector('img');
+                const overlay = nestedContainer.querySelector('.nested-hotspot-layer');
+
+                if (!boardImage || !overlay) return;
+
+                const designSize = parseFloat(overlay.getAttribute('data-design-size')) || 1024;
+
+                const updateOverlay = () => {
+                    const naturalWidth = boardImage.naturalWidth || boardImage.width;
+                    const naturalHeight = boardImage.naturalHeight || boardImage.height;
+
+                    if (!naturalWidth || !naturalHeight) {
+                        return;
+                    }
+
+                    overlay.setAttribute('viewBox', `0 0 ${naturalWidth} ${naturalHeight}`);
+
+                    overlay.querySelectorAll('.nested-hotspot').forEach(hotspot => {
+                        const rect = hotspot.querySelector('rect');
+                        if (rect) {
+                            if (!rect.dataset.baseX) {
+                                rect.dataset.baseX = rect.getAttribute('x') || '0';
+                                rect.dataset.baseY = rect.getAttribute('y') || '0';
+                                rect.dataset.baseWidth = rect.getAttribute('width') || '0';
+                                rect.dataset.baseHeight = rect.getAttribute('height') || '0';
+                            }
+
+                            const baseX = parseFloat(rect.dataset.baseX);
+                            const baseY = parseFloat(rect.dataset.baseY);
+                            const baseWidth = parseFloat(rect.dataset.baseWidth);
+                            const baseHeight = parseFloat(rect.dataset.baseHeight);
+
+                            rect.setAttribute('x', (baseX / designSize) * naturalWidth);
+                            rect.setAttribute('y', (baseY / designSize) * naturalHeight);
+                            rect.setAttribute('width', (baseWidth / designSize) * naturalWidth);
+                            rect.setAttribute('height', (baseHeight / designSize) * naturalHeight);
+                        }
+
+                        const dot = hotspot.querySelector('.pulsing-dot');
+                        if (dot) {
+                            if (!dot.dataset.baseCx) {
+                                dot.dataset.baseCx = dot.getAttribute('cx') || '0';
+                                dot.dataset.baseCy = dot.getAttribute('cy') || '0';
+                                dot.dataset.baseR = dot.getAttribute('r') || '12';
+                            }
+
+                            const baseCx = parseFloat(dot.dataset.baseCx);
+                            const baseCy = parseFloat(dot.dataset.baseCy);
+                            const baseR = parseFloat(dot.dataset.baseR);
+
+                            dot.setAttribute('cx', (baseCx / designSize) * naturalWidth);
+                            dot.setAttribute('cy', (baseCy / designSize) * naturalHeight);
+
+                            const scale = Math.min(naturalWidth, naturalHeight) / designSize;
+                            dot.setAttribute('r', baseR * scale);
+                        }
+                    });
+                };
+
+                if (boardImage.complete && (boardImage.naturalWidth || boardImage.width)) {
+                    updateOverlay();
+                } else {
+                    boardImage.addEventListener('load', updateOverlay, { once: true });
+                }
             }
 
 
@@ -1737,7 +1816,6 @@ Geri sayım son kez başladı…
                     }
                     
                     pageInfo.textContent = `Sayfa ${currentPage} / ${totalPages}`;
-                    prevButton.disabled = (currentPage === 1);
                     nextButton.disabled = (currentPage === totalPages);
                     
                     // Sayfa değiştiğinde scroll'u en üste al
