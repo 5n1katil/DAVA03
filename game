@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>5N1Katil - Dava Dosyası: Erhan Sivrizeka</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,77 +14,643 @@
 
         /* SVG Katmanı */
         #hotspot-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .hotspot-polygon { 
-            cursor: pointer; 
-            fill: rgba(255, 255, 0, 0.0); 
-            stroke: yellow; 
-            stroke-width: 2px; 
-            stroke-opacity: 0; 
-            transition: stroke-opacity 0.3s ease, filter 0.3s ease; 
+        .hotspot-polygon {
+            cursor: pointer;
+            fill: rgba(255, 255, 0, 0.0);
+            stroke: yellow;
+            stroke-width: 2px;
+            stroke-opacity: 0;
+            transition: stroke-opacity 0.3s ease, filter 0.3s ease, fill 0.3s ease;
         }
-        g.hotspot:hover .hotspot-polygon { 
-            stroke-opacity: 1; 
-            filter: drop-shadow(0 0 6px yellow) drop-shadow(0 0 12px rgba(255, 255, 0, 0.5));
-        }
-        
-        /* Maktul için özel yumuşak ve parlak çerçeve */
-        g#hotspot-victim:hover .hotspot-polygon {
-            stroke-width: 3px; /* Daha kalın */
-            stroke-opacity: 0.8; /* Hafif transparan */
-            filter: drop-shadow(0 0 12px rgba(255, 255, 220, 0.9)) drop-shadow(0 0 25px rgba(255, 255, 0, 0.7)) blur(1.5px);
+        g.hotspot:hover .hotspot-polygon {
+            stroke-opacity: 0;
+            fill: rgba(255, 255, 220, 0.15);
+            filter: drop-shadow(0 0 15px rgba(255, 255, 220, 1)) drop-shadow(0 0 35px rgba(255, 255, 150, 0.9)) blur(8px);
         }
 
-        /* Yanıp Sönen Nokta */
-        .pulsing-dot { 
-            fill: yellow; 
-            stroke-width: 0; 
-            r: 8px; 
-            animation: pulse 2.5s infinite ease-in-out; 
-            cursor: pointer; 
+        .pulsing-dot {
+            fill: #ffe352;
+            r: 7;
+            cursor: pointer;
+            transform-box: fill-box;
+            transform-origin: center;
+            transition: opacity .2s ease;
         }
-        g.hotspot:hover .pulsing-dot { 
-            animation-play-state: paused; 
-            opacity: 0; 
+        .hotspots-ready .pulsing-dot {
+            animation: pulseScaleGlow 1.9s ease-in-out infinite;
         }
-        /* Sadece parlama efektli, sabit animasyon */
-        @keyframes pulse {
+        g.hotspot:hover .pulsing-dot {
+            animation-play-state: paused;
+            opacity: 0;
+        }
+        @keyframes pulseScaleGlow {
             0%, 100% {
-                filter: drop-shadow(0 0 4px yellow);
+                transform: scale(1);
+                filter: drop-shadow(0 0 6px #ffe352) drop-shadow(0 0 14px rgba(255, 227, 82, .55));
             }
             50% {
-                filter: drop-shadow(0 0 12px yellow) drop-shadow(0 0 20px rgba(255, 255, 150, 0.8));
+                transform: scale(1.45);
+                filter: drop-shadow(0 0 10px #ffe352) drop-shadow(0 0 26px rgba(255, 227, 82, .95));
             }
         }
 
-        /* Modal ve Bilgisayar Stilleri */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
-        .modal-content { background-color: #1a1a1a; color: #f1f1f1; margin: 10% auto; padding: 25px; border: 1px solid #444; width: 90%; max-width: 600px; border-radius: 12px; animation: slideIn 0.5s ease-out; box-shadow: 0 5px 25px rgba(0,0,0,0.5); }
-        @keyframes slideIn { from {transform: translateY(-50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
-        .close-btn { color: #aaa; float: right; font-size: 32px; font-weight: bold; transition: color 0.3s; }
-        .close-btn:hover, .close-btn:focus { color: #ff4d4d; text-decoration: none; cursor: pointer; }
-        .modal-content h2 { font-family: 'Orbitron', sans-serif; color: #ffc107; border-bottom: 2px solid #555; padding-bottom: 10px; margin-top: 0; }
-        .modal-content p { font-size: 1.1em; line-height: 1.6; }
-        #computer-screen { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #000; color: #00ff41; font-family: 'Orbitron', monospace; padding: 20px; box-sizing: border-box; animation: fadeIn 0.5s; }
-        #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; }
-        #login-screen pre { font-size: 1.2rem; text-shadow: 0 0 5px #00ff41; }
-        #login-screen input { background-color: #111; border: 1px solid #00ff41; color: #00ff41; padding: 12px; font-size: 1.2em; margin-top: 20px; width: 220px; text-align: center; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 255, 65, 0.3); }
-        #login-screen button { background-color: #00ff41; border: none; color: #000; padding: 12px 24px; font-size: 1.2em; cursor: pointer; margin-left: 10px; border-radius: 5px; font-weight: bold; transition: background-color 0.3s, color 0.3s; }
-        #login-screen button:hover { background-color: #fff; color: #00ff41; }
-        #login-error { color: red; margin-top: 15px; height: 20px; text-shadow: 0 0 5px red; }
-        #desktop-screen { display: none; padding: 20px; }
-        #desktop-screen h1 { color: #00ff41; text-shadow: 0 0 5px #00ff41; }
-        #desktop-screen textarea { width: calc(100% - 40px); height: 65vh; background-color: #050505; border: 1px solid #00ff41; color: #00ff41; font-family: 'Courier New', Courier, monospace; font-size: 1.1em; line-height: 1.5; margin-top: 20px; border-radius: 5px; padding: 15px; }
-        .exit-computer { position: absolute; top: 15px; right: 30px; font-size: 40px; color: #00ff41; cursor: pointer; transition: transform 0.3s, color 0.3s; }
-        .exit-computer:hover { color: red; transform: rotate(90deg); }
+        /* Gizli Delil İçerik Kaynakları */
+        .evidence-source { display: none; }
+
+        /* Tam Ekran Görüntüleyici */
+        #fullscreen-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 3000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        #fullscreen-viewer.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #fullscreen-viewer.visible .viewer-content {
+            animation: zoomInEffect 0.4s ease-out;
+        }
+        .viewer-content {
+            position: relative;
+            background-color: #1a1a1a;
+            color: #f1f1f1;
+            padding: 25px;
+            border: 1px solid #444;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            /* Scrollbar stil ayarları */
+            scrollbar-width: thin;
+            scrollbar-color: #60a5fa #1a1a1a;
+        }
+        .viewer-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        .viewer-content::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 10px;
+        }
+        .viewer-content::-webkit-scrollbar-thumb {
+            background-color: #60a5fa;
+            border-radius: 10px;
+            border: 2px solid #1a1a1a;
+        }
+
+        .viewer-content h2 { font-family: 'Orbitron', sans-serif; color: #ffc107; border-bottom: 2px solid #555; padding-bottom: 10px; margin-top: 0; }
+        .viewer-content p { font-size: 1.1em; line-height: 1.6; }
+        .viewer-content img { max-width: 100%; border-radius: 8px; margin-bottom: 15px; }
+
+        .viewer-content.image-only {
+            background: none;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            width: auto;
+            height: auto;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow: visible;
+        }
+        .viewer-content.image-only img {
+            border: 2px solid #ffe352;
+            box-shadow: 0 0 25px rgba(255, 227, 82, .95);
+            max-height: 90vh;
+            display: block;
+            margin-bottom: 0;
+        }
+
+        .viewer-content.image-only.processor-image img {
+            border-color: #60a5fa;
+            box-shadow: 0 0 25px rgba(96, 165, 250, .95);
+        }
+
+        /* Video oynatıcı container stili */
+        .viewer-content.video-container {
+            background: #000;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            width: 90vw;
+            max-width: 1120px; /* Daha geniş olabilir */
+            aspect-ratio: 16 / 9; /* Video oranını koru */
+            height: auto; /* Yüksekliği otomatik ayarla */
+            max-height: 90vh;
+            overflow: hidden;
+            border-radius: 12px; /* Köşeleri yuvarla */
+        }
+        .viewer-content.video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0; /* Çerçeveyi kaldır */
+        }
+
+        .close-fullscreen {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            color: #aaa;
+            font-size: 40px;
+            font-weight: bold;
+            transition: color 0.3s, transform 0.3s;
+            cursor: pointer;
+            z-index: 3001;
+        }
+        .close-fullscreen:hover {
+            color: #ff4d4d;
+            transform: rotate(90deg);
+        }
+
+        @keyframes zoomInEffect {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* ------ Delil İçi Hotspot Sistemi ------ */
+        .nested-evidence-container {
+            position: relative;
+            line-height: 0;
+        }
+        .nested-hotspot-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .nested-hotspot rect {
+            fill: rgba(255, 255, 255, 0.01);
+            stroke: transparent;
+            stroke-width: 3px;
+            transition: filter 0.3s ease, fill 0.3s ease;
+            cursor: pointer;
+            pointer-events: all;
+        }
+        .nested-hotspot:hover rect {
+            fill: rgba(96, 165, 250, 0.2);
+            filter: drop-shadow(0 0 15px rgba(96, 165, 250, 1))
+                    drop-shadow(0 0 35px rgba(96, 165, 250, 0.8))
+                    drop-shadow(0 0 60px rgba(77, 175, 255, 0.6))
+                    blur(4px);
+        }
+        .nested-hotspot .pulsing-dot {
+            fill: #0d2a4c;
+            stroke: #93c5fd;
+            stroke-width: 1px;
+            animation: pulseScaleGlowBlue 1.9s ease-in-out infinite;
+            animation-play-state: paused;
+        }
+        .nested-hotspot-layer.hotspots-ready .pulsing-dot {
+            animation-play-state: running;
+        }
+        .nested-hotspot:hover .pulsing-dot {
+            animation-play-state: paused;
+            opacity: 0;
+        }
+        @keyframes pulseScaleGlowBlue {
+            0%, 100% {
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 8px rgba(147, 197, 253, 0.8))
+                        drop-shadow(0 0 15px rgba(96, 165, 250, 0.6));
+            }
+            50% {
+                transform: scale(1.5);
+                filter: drop-shadow(0 0 15px rgba(147, 197, 253, 1))
+                        drop-shadow(0 0 30px rgba(96, 165, 250, 0.9))
+                        drop-shadow(0 0 50px rgba(96, 165, 250, 0.7));
+            }
+        }
+        /* ------------------------------------ */
+
+        /* -- MASAÜSTÜ STİLLERİ -- */
+        #desktop-screen {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            padding: 0;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .desktop-icons-container {
+            display: flex;
+            flex-flow: column wrap; /* Önce dikey, sonra yana sar */
+            align-content: flex-start; /* Sütunları sola yasla */
+            gap: 15px; /* İkonlar arası boşluk */
+            padding: 20px;
+            flex-grow: 1;
+            height: auto; /* Otomatik yükseklik */
+            overflow-y: auto; /* Gerekirse dikey scroll */
+            overflow-x: hidden; /* Yatay scroll engelli */
+            box-sizing: border-box; /* Padding hesaba katılsın */
+        }
+        .desktop-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* İçeriği yukarıdan başlat */
+            width: 90px; /* Sabit genişlik */
+            height: auto; /* Yüksekliği otomatik yap */
+            min-height: 100px; /* Minimum yükseklik */
+            padding: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            box-sizing: border-box;
+        }
+        .desktop-icon:hover {
+            background-color: rgba(96, 165, 250, 0.2);
+            outline: 1px solid rgba(96, 165, 250, 0.4);
+        }
+        .desktop-icon svg {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 8px;
+            flex-shrink: 0; /* SVG küçülmesin */
+        }
+        .desktop-icon span {
+            color: #f1f1f1;
+            font-size: 13px;
+            text-align: center;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+            word-break: break-word; /* Kelimeleri kır */
+            line-height: 1.3em; /* Satır yüksekliği */
+            overflow-wrap: break-word; /* Kelime taşmasını engelle */
+            width: 100%; /* Genişliği doldur */
+        }
+        .desktop-taskbar {
+            width: 100%;
+            height: 40px;
+            background-color: rgba(10, 20, 35, 0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #3b82f6;
+            margin-top: auto; /* En alta iter */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            box-sizing: border-box;
+            flex-shrink: 0; /* Küçülmesini engelle */
+        }
+        .start-button {
+            width: 32px;
+            height: 32px;
+            background-color: #3b82f6;
+            border-radius: 4px;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+        }
+         .start-button svg { width: 22px; height: 22px; fill: white; }
+         .start-button:hover { background-color: #ef4444; }
+        .clock {
+            color: #f1f1f1;
+            font-size: 14px;
+        }
+
+        /* KLASÖR PENCERESİ STİLLERİ */
+        #folder-viewer {
+            display: none;
+            position: absolute;
+            z-index: 3001; /* Tam ekran görüntüleyicinin hemen altında */
+            background-color: #0d1117;
+            border: 2px solid #60a5fa;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,.6);
+            width: 90%;
+            max-width: 800px;
+            height: auto;
+            max-height: 80vh;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            flex-direction: column;
+            /* animation: zoomInEffect 0.3s ease-out; -- BU SATIR KALDIRILDI */
+        }
+        .folder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #070f1f;
+            border-bottom: 1px solid #60a5fa;
+            border-radius: 10px 10px 0 0;
+            padding: 8px 15px;
+        }
+        .folder-header h3 {
+            margin: 0;
+            color: #93c5fd;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .folder-header h3 svg {
+            width: 20px;
+            height: 20px;
+            fill: #93c5fd;
+        }
+        .close-folder-btn {
+            font-size: 24px;
+            color: #60a5fa;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+            font-weight: bold;
+        }
+        .close-folder-btn:hover {
+            color: #ef4444;
+            transform: rotate(90deg);
+        }
+        .folder-content {
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-wrap: wrap; /* İkonları yan yana sar */
+            gap: 15px; /* İkonlar arası boşluk */
+            align-content: flex-start; /* İçeriği yukarıdan başlat */
+        }
+        /* Klasör içindeki ikonlar için .desktop-icon stilini yeniden kullanıyoruz */
+        .folder-content .desktop-icon {
+            /* Stil zaten global olarak tanımlı, ek ayara gerek yok */
+        }
+        /* ------------------------------------ */
+
+
+        /* Şüpheliler, E-posta, İhtarname dosyası için doküman stili */
+        .document-modal-content {
+            background-color: #ffffff; /* Temiz beyaz sayfa */
+            color: #1f1f1f; /* Koyu metin */
+            padding: 30px 40px; /* Daha fazla padding */
+            border-radius: 5px;
+            font-family: Calibri, "Segoe UI", Arial, sans-serif; /* İstenen font */
+            font-size: 1.05em;
+            line-height: 1.6;
+            border: 1px solid #ccc; /* Hafif çerçeve */
+            max-width: 750px; /* Biraz daha geniş */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .document-modal-content h2 {
+            color: #1a1a1a;
+            font-family: 'Orbitron', sans-serif; /* Başlıkta temayı koru */
+            border-bottom: 2px solid #ddd; /* Daha yumuşak ayırıcı */
+            padding-bottom: 15px; /* Daha fazla boşluk */
+            margin-top: 0;
+            margin-bottom: 25px; /* Başlık sonrası boşluk */
+            font-size: 1.5em;
+        }
+        .document-modal-content p {
+            margin-top: 0;
+            margin-bottom: 1.3em; /* Paragraf arası boşluk */
+        }
+        .document-modal-content p strong {
+            color: #000;
+            font-weight: 700;
+        }
+        .document-modal-content hr { /* E-posta için ayırıcı */
+             border: none;
+             border-top: 1px dashed #bbb;
+             margin: 25px 0;
+        }
+        /* Tarayıcı geçmişi için özel pre stili */
+        .document-modal-content pre.browser-history {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #333;
+        }
+         /* ------------------------------------ */
+
+
+        /* Bilgisayar Stilleri */
+        #computer-screen { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #000; font-family: Calibri, "Segoe UI", Arial, sans-serif; box-sizing: border-box; animation: fadeIn 0.5s; background: linear-gradient(180deg,#061325 0%, #030b18 100%); color: #c7d2fe; }
+        #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; box-sizing: border-box; padding: 24px; }
+
+        .exit-computer { position: absolute; top: 15px; right: 30px; font-size: 40px; cursor: pointer; transition: transform 0.3s, color 0.3s; color:#60a5fa; z-index: 2001;}
+        .exit-computer:hover { color:#93c5fd; transform: rotate(90deg); }
+
+        .login-card { display:flex; flex-direction:column; align-items:center; gap:14px; width:min(92vw,420px); margin:0 auto; padding:24px 22px; border-radius:16px; background:linear-gradient(180deg,#0a1426 0%, #070f1f 100%); border:2px solid #60a5fa; box-shadow: 0 0 0 2px rgba(96,165,250,.25), 0 10px 40px rgba(0,0,0,.6), inset 0 0 30px rgba(59,130,246,.08); }
+        .login-card h3 { font-family:'Orbitron', sans-serif; letter-spacing:.08em; margin:6px 0 4px; color:#93c5fd; text-shadow:0 0 6px rgba(147,197,253,.65); }
+
+        .small-note { font-size:.85rem; opacity:.8; }
+        .small-note.warning { color:#93c5fd; opacity:.85; margin-top:10px; }
+        #login-error { color:#ef4444; text-shadow:0 0 5px rgba(239,68,68,.6); }
+
+        .avatar {
+            width:96px; height:96px; border-radius:9999px;
+            display:grid; place-items:center;
+            border:2px solid #60a5fa;
+            background: radial-gradient(circle at 50% 35%, #f3f4f6 0%, #e5e7eb 55%, #d1d5db 100%);
+            background-image: url('https://i.imgur.com/0YoteaD.png'); /* Görsel linki GÜNCELLENDİ (daha iyi kalite) */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            overflow: hidden;
+        }
+        .avatar svg { display: none; }
+
+        .login-btn { text-transform: none !important; width:min(86vw,360px); font-weight:700; border:0; padding:12px 16px; border-radius:10px; cursor:pointer; letter-spacing:.06em; background:#60a5fa !important; color:#ffffff !important; border:1px solid #93c5fd; }
+        .login-btn:hover { background:#93c5fd !important; color:#0b1220 !important; }
+
+        .field { width: min(86vw, 360px); margin: 0 auto; }
+        .field .field-label { display:block; width:100%; margin:10px 0 6px; text-align:left; text-transform:none; font-size:.85rem; color:#93c5fd; letter-spacing:.04em; opacity:.9; font-weight:600; }
+        .field .input-row { display:grid; grid-template-columns: 36px 1fr; align-items:center; column-gap:10px; width:100%; position:relative; }
+        .field .input-row .icon { position: static; transform:none; width:28px; height:28px; justify-self:center; opacity:.95; pointer-events:none; }
+        .field .input-row input { width:100%; height:48px; line-height:1.1; padding:12px 14px; background:#0b1220; color:#dbeafe; border:1px solid #60a5fa; border-radius:10px; box-shadow: 0 0 0 1px rgba(96,165,250,.35), inset 0 0 12px rgba(96,165,250,.10); font-size:1.05rem;}
+        .field .input-row input:focus { border-color:#93c5fd; box-shadow: 0 0 0 2px rgba(147,197,253,.35), inset 0 0 14px rgba(147,197,253,.16); }
+        .field .input-row input::placeholder { color:#93c5fd; opacity:.7; }
+        .field .input-row .icon path { fill:#93c5fd !important; }
+        .field .input-row input[readonly] { background:#0b0b1a; color:#c7d2fe; border-color:#1e3a8a; cursor:not-allowed; }
+        .field .input-row input[readonly]:focus { border-color:#1e3a8a; box-shadow: inset 0 0 8px rgba(59,130,246,.08); }
+
+
+        /* --- TEHDİT MESAJI MODAL STİLLERİ --- */
+        #threat-modal {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #threat-modal .modal-content {
+            width: 100%;
+            max-width: 700px;
+            background-color: #0d1117;
+            border: 1px solid #dc2626;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(220, 38, 38, 0.4);
+            animation: zoomInEffect 0.4s ease-out;
+            display: flex;
+            flex-direction: column;
+        }
+        #threat-modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background-color: #7f1d1d;
+            border-bottom: 1px solid #dc2626;
+            border-radius: 11px 11px 0 0;
+        }
+        #threat-modal .modal-header h2 {
+            margin: 0;
+            font-size: 1.1em;
+            font-family: 'Orbitron', sans-serif;
+            color: #fef2f2;
+            text-shadow: 0 0 5px rgba(255, 150, 150, 0.7);
+        }
+        #threat-modal .close-modal-btn {
+            font-size: 28px;
+            color: #fca5a5;
+            cursor: pointer;
+            transition: color 0.2s;
+            font-weight: bold;
+        }
+        #threat-modal .close-modal-btn:hover {
+            color: #fff;
+        }
+        #threat-modal .modal-body {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+            background-color: #020409;
+        }
+        #threat-modal .modal-body pre {
+            margin: 0;
+            padding: 0;
+            color: #e5e5e5;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95em;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        #threat-modal .modal-footer {
+            padding: 15px 20px;
+            text-align: right;
+            border-top: 1px solid #4b5563;
+            border-radius: 0 0 11px 11px;
+        }
+        #threat-modal .close-modal-ok-btn {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        #threat-modal .close-modal-ok-btn:hover {
+            background-color: #60a5fa;
+        }
+
+        /* ----- PDF GÖRÜNTÜLEYİCİ STİLLERİ (YENİ) ----- */
+        .viewer-content.pdf-viewer {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            background: #202124;
+            max-width: 1000px;
+            width: 95%;
+            height: 95vh; /* Sabit yükseklik */
+            max-height: 95vh; /* max-height'i geçersiz kıl */
+            overflow: hidden; /* Dış scrollbar'ı engelle */
+            border-color: #4b5563;
+        }
+        .pdf-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #4b5563;
+            flex-shrink: 0;
+        }
+        .pdf-header .pdf-page-nav button {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .pdf-header .pdf-page-nav button:hover {
+            background-color: #60a5fa;
+        }
+        .pdf-header .pdf-page-nav button:disabled {
+            background-color: #4b5563;
+            cursor: not-allowed;
+        }
+        .pdf-header .pdf-page-info {
+            color: #f1f1f1;
+            font-size: 1em;
+            font-weight: 600;
+        }
+        .pdf-pages-container {
+            flex-grow: 1;
+            overflow: auto; /* HEM VARSAYILAN HEM YAKINLAŞTIRMA İÇİN */
+            padding: 20px;
+            background: #313131;
+            min-height: 0; /* Flexbox kaydırma düzeltmesi */
+            text-align: center; /* Resmi ortala */
+        }
+        .pdf-pages-container .pdf-page {
+            display: none; /* JS ile yönetilecek */
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #1a1a1a;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: zoom-in;
+            transition: transform 0.2s ease;
+        }
+        .pdf-pages-container .pdf-page.active {
+            display: inline-block;
+        }
+        .pdf-pages-container.zoomed-in .pdf-page.active {
+            max-width: none; /* Orijinal boyuta izin ver */
+            cursor: zoom-out;
+        }
+        /* ------------------------------------------- */
+
     </style>
 </head>
 <body>
 
     <div id="game-container">
-        <img src="https://i.imgur.com/wn0Fkht.png" id="crime-scene-img" alt="Olay Yeri - Erhan Sivrizeka'nın Laboratuvarı">
-        
+        <img src="https://i.imgur.com/8v0LkAV.png" id="crime-scene-img" alt="Olay Yeri - Erhan Sivrizeka'nın Laboratuvarı" onerror="this.onerror=null; this.parentElement.innerHTML='<h1>Ana Olay Yeri Görseli Yüklenemedi.</h1>';">
+
         <svg id="hotspot-layer" preserveAspectRatio="none" viewBox="0 0 1280 853">
-            <!-- KULLANICIDAN GELEN KODLARLA DOLDURULDU -->
             <g class="hotspot" id="hotspot-periodic" data-modal="modal-periodic">
                 <polygon class="hotspot-polygon" points="261.84,134.61 569.48,167.23 568.08,407.59 263.25,428.20"></polygon>
                 <circle class="pulsing-dot" cx="415.66" cy="284.40"></circle>
@@ -112,96 +678,1151 @@
         </svg>
     </div>
 
-    <!-- Delil Modal Pencereleri -->
-    <div id="modal-periodic" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Delil: Periyodik Cetvel</h2><p>Maktulün çalışma masasının üzerindeki periyodik cetvel dikkat çekiyor. Bazı element grupları farklı renklendirilmiş.</p><p><strong>Bulmaca:</strong> Şifrenin ilk hanesi, cetvelde <span style="color:#ff6b6b; font-weight:bold;">kırmızı</span> ile işaretlenmiş Alkali Metaller grubunun ilk elementinin atom numarasıdır.</p></div></div>
-    <div id="modal-equation" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Delil: "İlahi Denklem" Panosu</h2><p>Pano üzerinde karmaşık bir beyin şeması ve formüller yer alıyor. Maktulün son projesi olduğu düşünülüyor.</p><p><strong>Bulmaca:</strong> Şifrenin ikinci hanesi, panonun başlığındaki ilk kelimenin harf sayısıdır.</p></div></div>
-    <div id="modal-photo" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Delil: Çerçeveli Fotoğraf</h2><p>Masanın üzerindeki çerçevede maktulün mutlu bir anına ait fotoğrafı var. Bir doğum günü kutlaması gibi görünüyor.</p><p><strong>Bulmaca:</strong> Şifrenin üçüncü hanesi, doğum günü pastasındaki yanan mumların sayısıdır.</p></div></div>
-    <div id="modal-chess" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Delil: Satranç Tahtası</h2><p>Oyun yarım kalmış gibi duruyor. Beyaz taşlarla oynayan oyuncu için kritik bir pozisyon.</p><p><strong>Bulmaca:</strong> Şifrenin dördüncü hanesi, beyaz şahın yanında (aynı yatay veya dikey sırada) duran ağır taşların (kale veya vezir) toplam sayısıdır.</p></div></div>
-    <div id="modal-victim" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Delil: Maktul</h2><p>Erhan Sivrizeka, yerde cansız yatıyor. İlk incelemelere göre herhangi bir darp veya yara izi yok. Ölüm sebebi henüz belirsiz. Üzerindeki beyaz laboratuvar önlüğünde '1' numaralı delil kartı duruyor.</p></div></div>
-    <div id="modal-computer" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h2>Delil: Bilgisayar</h2><p>Bu bilgisayara erişmek gerekiyor. İçinde önemli bilgiler olabilir.</p></div></div>
+    <!-- Gizli Delil İçerik Kaynakları -->
+    <div class="evidence-source" id="source-periodic">
+        <img src="https://i.imgur.com/BgYgEBN.png" alt="Periyodik Cetvel Yakın Çekim" onerror="this.src='https://placehold.co/800x600/1a1a1a/e0e0e0?text=Delil+Yüklenemedi';">
+    </div>
+    <div class="evidence-source" id="source-equation">
+        <div class="nested-evidence-container">
+            <!-- Ana Pano Görseli -->
+            <img src="https://i.imgur.com/G0OXIXn.png" alt="Ebedi Korteks Projesi Şeması Yakın Çekim" onerror="this.src='https://placehold.co/1024x1024/1a1a1a/e0e0e0?text=Delil+Yüklenemedi';">
+            
+            <!-- İnteraktif SVG Katmanı -->
+            <svg class="nested-hotspot-layer" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1024 1024">
+                <!-- İşlemci 1 (Sol Üst) -->
+                <g class="nested-hotspot" data-evidence-id="processor-1">
+                    <rect x="110" y="112" width="230" height="230"></rect>
+                    <circle class="pulsing-dot" cx="225" cy="227"></circle>
+                </g>
+                <!-- İşlemci 2 (Sağ Üst) -->
+                <g class="nested-hotspot" data-evidence-id="processor-2">
+                    <rect x="685" y="112" width="230" height="230"></rect>
+                    <circle class="pulsing-dot" cx="800" cy="227"></circle>
+                </g>
+                <!-- İşlemci 3 (Sol Alt) -->
+                <g class="nested-hotspot" data-evidence-id="processor-3">
+                    <rect x="110" y="668" width="230" height="230"></rect>
+                    <circle class="pulsing-dot" cx="225" cy="783"></circle>
+                </g>
+                <!-- İşlemci 4 (Sağ Alt) -->
+                <g class="nested-hotspot" data-evidence-id="processor-4">
+                    <rect x="685" y="668" width="230" height="230"></rect>
+                    <circle class="pulsing-dot" cx="800" cy="783"></circle>
+                </g>
+            </svg>
+        </div>
+    </div>
+    <div class="evidence-source" id="source-photo">
+        <img src="https://i.imgur.com/hUdIu11.png" alt="Çerçeveli Fotoğraf Yakın Çekim" onerror="this.src='https://placehold.co/600x800/1a1a1a/e0e0e0?text=Delil+Yüklenemedi';">
+    </div>
+    <div class="evidence-source" id="source-chess">
+        <img src="https://i.imgur.com/Vjemgct.png" alt="Satranç Tahtası Yakın Çekim" onerror="this.src='https://placehold.co/800x400/1a1a1a/e0e0e0?text=Delil+Yüklenemedi';">
+    </div>
+    <div class="evidence-source" id="source-victim">
+        <h2>Delil: Maktul</h2>
+        <p>Erhan Sivrizeka, yerde cansız yatıyor. İlk incelemelere göre herhangi bir darp veya yara izi yok. Ölüm sebebi detayları için adli tıp tarafından yapılan otopsi raporu incelenmelidir. Üzerindeki beyaz laboratuvar önlüğünde '1' numaralı delil kartı duruyor.</p>
+    </div>
+    <!-- İşlemciler için yeni delil kaynakları -->
+    <div class="evidence-source" id="source-processor-1">
+        <img src="https://i.imgur.com/2m9Crvf.png" alt="I. İşlemci" onerror="this.src='https://placehold.co/800x800/1a1a1a/e0e0e0?text=Delil+Yüklenemedi';">
+    </div>
+    <div class="evidence-source" id="source-processor-2">
+        <img src="https://i.imgur.com/682AajA.png" alt="II. İşlemci" onerror="this.src='https://placehold.co/800x800/1a1a1a/e0e0e0?text=Delil+Yüklenemedi';">
+    </div>
+    <div class="evidence-source" id="source-processor-3">
+        <img src="https://i.imgur.com/gRVIoK9.png" alt="III. İşlemci" onerror="this.src='https://placehold.co/800x800/1a1a1a/e0e0e0?text=Delil+Yüklenemedi';">
+    </div>
+    <div class="evidence-source" id="source-processor-4">
+        <img src="https://i.imgur.com/0H2x0eB.png" alt="IV. İşlemci" onerror="this.src='https://placehold.co/800x800/1a1a1a/e0e0e0?text=Delil+Yüklenemedi';">
+    </div>
+
+    <!-- Şüpheliler Dosyası İçeriği -->
+    <div class="evidence-source" id="source-suspects">
+        <div class="document-modal-content">
+            <h2>Gizli Not: ŞÜPHELİLERİM</h2>
+            <p><strong>Prof. Dr. Faruk Alkan (Eski Akıl Hocam):</strong> Yıllarca onu idol olarak gördüm, çalışmalarını örnek aldım. Onun yanında asistan olarak çalışmaya başladığım günleri hâlâ dün gibi hatırlıyorum. Bana bilimi, merakı, sorgulamayı öğreten oydu. Ama Ebedi Korteks Projesi’yle birlikte bütün dengeler değişti. Artık bana baktığında bir gurur değil, boğucu bir kıskançlık görüyorum. Önce mailde yazdıkları, sonra yediremeyip araması… Geçtiğimiz hafta telefon görüşmemizde “Bu proje tehlikeli, Erhan. Bunu sürdürmemelisin” dedi. Sesindeki titremeyi sadece korku diye yorumlayamıyorum… daha çok, kontrolün elinde olmamasının verdiği bir öfke gibiydi. Bana yönelmiş bir öfke.</p>
+            <p><strong>Levent Gürsoy (Yatırımcı):</strong> Tek derdi para. Projeyi insanlığın yararı için açık kaynak yapma fikrimden nefret ediyor. Projeyi bir an önce tamamlayıp onu paraya boğmazsam beni "bitireceğini" söylediği bir ses kaydım var. Şirketinin durumu da pek parlak değilmiş öğrendiğim kadarıyla. Çaresiz ve bir o kadar da tehlikeli bir adam olabilir.</p>
+            <p><strong>Dr. Canan Yalçın (Asistanım):</strong> Zekâsına hayranım. Hırsına ise… şüpheyle bakıyorum.Son aylarda laboratuvarda benden sonra en çok kalan kişi oydu. Bazen sabah geldiğimde masasında yarısı silinmiş notlar buluyordum. Benden neyi gizliyordu?Yorgun, dalgın ve garip bir şekilde huzursuz görünüyordu. Bana karşı hâlâ sadık mı, yoksa projeyi benden koparıp kendi geleceği için mi kullanacak?</p>
+            <p><strong>Selin Karaca (Eski Eşim):</strong> Ayrılığımızı asla kabullenmedi. Bana hep, “Hayatımı çaldın, şimdi de hayallerimi çalıyorsun” dedi. Projeye bir kuruş katkısı olmamasına rağmen hâlâ pay istiyor. Bir keresinde yüzüme haykırdı: “O projeden gelecek tek kuruşu bile sana yar etmem, Erhan!”Bunu söylerken gözlerinde ki kini gördüm. Onda birini öldürecek bir cesaret olduğuna asla inanmıyorum. Ama bu projeyi batırmak için başkalarıyla iş birliği yapabilir…</p>
+            <p><strong>Mete Aslan (Rakip CEO):</strong> Bionano.tech’in başındaki hırslı, sinsi adam. Yıllardır fikrimi çalmaya çalışıyor. Son siber saldırı girişimleri bu sefer daha cesur, daha sistematikti. Sanki içeriden bir yardım alıyor gibiydi… Mete’nin gözünü kararttığını ve her şeyi yapabileceğini biliyorum. Bu teknolojiye sahip olursa yalnızca beni yok etmekle kalmayacak, aynı zamanda insanlığın geleceğini de yok edecek…</p>
+        </div>
+    </div>
+
+    <!-- Levent Gürsoy Ses Kaydı (Video) İçeriği -->
+    <div class="evidence-source" id="source-audio-log">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/kOaYgX6xRKM" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+
+    <!-- E-posta Dökümü İçeriği -->
+    <div class="evidence-source" id="source-email-fa">
+        <div class="document-modal-content">
+             <h2>E-posta Dökümü: FA_Etik_Tartismasi.eml</h2>
+             <p><strong>Gönderen:</strong> Faruk Alkan &lt;f.alkan@universite.edu&gt;<br>
+                 <strong>Alıcı:</strong> Erhan Sivrizeka &lt;e.sivrizeka@eslab&gt;<br>
+                 <strong>Konu:</strong> Projenin Gidişatı Hakkında Ciddi Endişelerim<br>
+                 <strong>Tarih:</strong> 07.09.2025</p>
+             <hr>
+             <p>Erhan,</p>
+             <p>Son görüşmemizden beri Ebedi Korteks Projesi üzerine çok düşündüm. Başlangıçta bilimsel olarak parlak bir fikirdi, ama artık geldiğin nokta beni derinden kaygılandırıyor.</p>
+             <p>Yöntemlerini inceledim; bellek transferi için kullandığın nöral haritalama süreci deney hayvanlarında ümit vadediyor olabilir, fakat ikimiz de çok iyi biliyoruz ki bu çalışmayı ilerletmenin tek yolu insan deneklerde çalışmak olacaktır. Bunun için yeterli ve güvenli verin olmadığını biliyorum. Ayrıca bu durum etik sınırların çok ötesinde ve geri dönüşü olmayan zararlar doğurabilir.</p>
+             <p>Açık konuşacağım: Tanrıyı oynamaya çalışıyorsun. Senin gözünde bu bir devrim olabilir, ama kontrolsüz bırakılırsa sadece seni değil, bilimin itibarını da yok edebilir.</p>
+             <p>Bu projeyi ya daha güvenli ve denetlenebilir bir yola sokmalısın ya da tamamen durdurmalısın. Aksi takdirde bunun sonuçları felaket olacak.</p>
+             <p>Umarım doğru kararı bir an önce verirsin.</p>
+             <p>Prof. Dr. Faruk Alkan</p>
+             <hr>
+             <p><strong>Gönderen:</strong> Erhan Sivrizeka &lt;e.sivrizeka@eslab&gt;<br>
+                 <strong>Alıcı:</strong> Faruk Alkan &lt;f.alkan@universite.edu&gt;<br>
+                 <strong>Konu:</strong> Re: Projenin Gidişatı Hakkında Ciddi Endişelerim<br>
+                 <strong>Tarih:</strong> 07.09.2025</p>
+             <hr>
+             <p>Faruk Hocam,</p>
+             <p>Endişelerinizi anlıyorum ama size şunu net söylemeliyim: Eğer bilim insanları her zaman etik kaygılarla geri adım atsaydı bugün hiçbir ilerleme kaydedemezdik. Elektriğin, antibiyotiğin, hatta genetik mühendisliğinin ilk adımlarında da “etik değil” diyenler vardı.</p>
+             <p>Ebedi Korteks Projesi sadece bir deney değil, insanlığın evriminde yeni bir çağın kapısı. Evet, riskli. Ama her devrim risklidir. Eğer bu adımı biz atmazsak, bir başkası atacaktır. Ve o zaman gerçekten kontrolsüz olur.</p>
+             <p>Beni tanırsınız; ben hiçbir şeyi yarım bırakmam. Bu proje ilerleyecek. Tarih, kimlerin cesaret ettiğini, kimlerin korktuğunu yazacak…</p>
+             <p>Prof. Dr. Erhan Sivrizeka</p>
+        </div>
+    </div>
+
+    <!-- Faruk Alkan Telefon Görüşmesi İçeriği -->
+    <div class="evidence-source" id="source-phone-call-fa">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/caBYaprX0-w" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+
+    <!-- İhtarname İçeriği -->
+    <div class="evidence-source" id="source-warning-sk">
+        <div class="document-modal-content">
+            <h2>İHTARNAME: Demir Hukuk Bürosu</h2>
+            <p style="text-align: center; margin-bottom: 20px;">
+                <img src="https://i.imgur.com/LltLDAU.png" alt="Demir Hukuk Bürosu Logosu" style="max-width: 150px; display: block; margin: 0 auto 10px;" onerror="this.src='https://placehold.co/150x50/cccccc/333333?text=Logo+Yok'">
+                <strong>DEMİR HUKUK BÜROSU</strong>
+            </p>
+            <p><strong>KEŞİDECİ:</strong> Selin Karaca<br>
+                <strong>VEKİLİ:</strong> Av. Ayla Demir</p>
+            <p><strong>MUHATAP:</strong> Prof. Dr. Erhan Sivrizeka</p>
+            <p><strong>TEBLİĞ TARİHİ:</strong> 02/09/2025</p>
+            <p><strong>KONU:</strong> Evlilik birliği içerisinde temelleri atılan "Ebedi Korteks Projesi" adlı fikri mülkiyet üzerindeki müvekkilimin yasal haklarının gaspının durdurulması ve haklarının ivedilikle teslimi talebidir.</p>
+            <hr>
+            <p>Sayın Sivrizeka,</p>
+            <p>Müvekkilim Sayın Selin Karaca adına tarafınıza bildirmekteyiz ki, evliliğiniz süresince - özellikle 2015 yılında müvekkilimin size hediye ettiği deri kaplı not defterine ilk şemalarını çizdiğiniz dönemde - temelleri atılan "Ebedi Korteks Projesi" üzerinde müvekkilimin de Medeni Kanun uyarınca edinilmiş mal kapsamında yasal hakları bulunmaktadır.</p>
+            <p>Boşanma protokolünde bu projenin gelecekteki ticari değerinin öngörülememiş olması, müvekkilimin haklarını ortadan kaldırmamaktadır. Müvekkilimin hem maddi hem de manevi katkıları, proje kapsamında yapılan patent başvuruları, bilimsel raporlar ve laboratuvar kayıtları ile sabittir.</p>
+            <p>Projenin tek taraflı şekilde sahiplenilmesi, müvekkilimin hem maddi hem de manevi katkılarının görmezden gelinmesi, açıkça kötü niyetli bir eylemdir.</p>
+            <p><strong>TALEP:</strong></p>
+            <p>İşbu ihtarnamenin tebliğinden itibaren 7 (yedi) iş günü içerisinde;</p>
+            <ul style="list-style-type: none; padding-left: 0;">
+                <li>- Projenin mevcut ve gelecekteki tüm gelirlerinden,</li>
+                <li>- Patent haklarından,</li>
+                <li>- Lisans anlaşmalarından</li>
+            </ul>
+            <p>müvekkilime %50 (yüzde elli) oranında pay verilmesini kabul ettiğinizi, noter tasdikli bir sözleşme ile tarafımıza bildirmenizi talep etmekteyiz.</p>
+            <p>Aksi takdirde; projenin mahkeme kararıyla derhal durdurulması, şahsi malvarlığınıza ihtiyati tedbir konulması ve bağlı bulunduğunuz üniversitedeki tüm araştırma faaliyetlerinizin dava kapsamına alınması için gerekli tüm hukuki yollara başvurulacaktır.</p>
+            <p>Bilgilerinize sunarız.</p>
+            <p style="text-align: right; margin-top: 30px;">
+                <strong>Av. Ayla Demir</strong><br>
+                (Selin Karaca Vekili)
+            </p>
+        </div>
+    </div>
+
+    <!-- YUTEBEK Etik Kurul Raporu (PDF GÖRÜNTÜLEYİCİ) -->
+    <div class="evidence-source" id="source-yutebek-report">
+        <!-- PDF Görüntüleyici HTML Yapısı -->
+        <div class="pdf-header">
+            <div class="pdf-page-nav">
+                <button class="prev-page">&lt; Önceki Sayfa</button>
+            </div>
+            <div class="pdf-page-info">Sayfa 1 / 2</div>
+            <div class="pdf-page-nav">
+                <button class="next-page">Sonraki Sayfa &gt;</button>
+            </div>
+        </div>
+        <div class="pdf-pages-container">
+            <img src="https://i.imgur.com/pnoHG5q.png" alt="YUTEBEK Raporu - Sayfa 1" class="pdf-page active" data-page="1" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+1+Yüklenemedi';">
+            <img src="https://i.imgur.com/kXABuGc.png" alt="YUTEBEK Raporu - Sayfa 2" class="pdf-page" data-page="2" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+2+Yüklenemedi';">
+        </div>
+    </div>
+
+    <!-- Gürsoy Holding Mali Raporu -->
+    <div class="evidence-source" id="source-gursoy-report">
+        <div class="document-modal-content">
+            <h2 style="color: #dc2626;">KRİTİK_GİZLİ_Gürsoy Holding</h2>
+            <p><strong>Hazırlayan:</strong> Gürsoy Holding — Finans Direktörü (CFO)<br>
+               <strong>Rapor Türü:</strong> Üç Aylık Mali Değerlendirme — Özet<br>
+               <strong>Rapor Tarihi:</strong> 25.08.2025<br>
+               <strong>Gizlilik:</strong> GÖREVLİLER DIŞINDA AÇIKLANAMAZ / BOARD EYES ONLY</p>
+            <hr>
+            <p><strong>Genel Durum:</strong> <span style="color: #dc2626; font-weight: bold;">KRİTİK — İFLAS RİSKİ YÜKSEK</span></p>
+            <p><strong>Kısa Özet:</strong></p>
+            <p>Şirket nakit pozisyonu kritik seviyeye düşmüştür. Mevcut likidite, planlanan faaliyet akışı göz önüne alındığında yaklaşık <strong>8–10 hafta</strong> (2 ay ±) nakit runway’e sahiptir.</p>
+            <p>Kısa vadeli borçlar ve bankaya olan taahhütler vadesini doldurmaya başlamıştır; teminat gereklilikleri yerine getirilmezse <strong>teminatlı varlıklara bloke</strong> gelebilir.</p>
+            <p>Alacak tahsilatlarında ciddi gecikme ve beklenmedik müşteri iptalleri rapor edilmiştir.</p>
+            <p><strong>Önemli Maddeler:</strong></p>
+            <ul style="padding-left: 20px;">
+                <li><strong>İflas Riski:</strong> İç değerlendirmeye göre iflas riski <strong>%95</strong> olarak hesaplanmıştır (mevcut koşullar altındaki senaryo).</li>
+                <li><strong>İvedi Çözüm Önerisi:</strong> İştirak şirketlerden biri olan <strong>“Ebedi Korteks Projesi”</strong>nin ticarileştirilmesi — erken lisans anlaşması, hızlı patent satış/transferi veya stratejik ortaklık yoluyla acilen nakit elde edilmesi.</li>
+                <li><strong>Ticari Zaman Çizelgesi:</strong> Yönetim Kurulu’nun acil talimatı: Projenin ticarileştirilmesi veya lisanslanması için <strong>30 gün</strong> içinde somut sonuç/teklif getirilmezse şirketin finansal kurtuluş seçenekleri tükenme noktasına gelecektir.</li>
+                <li><strong>Operasyonel Riskler:</strong> Projenin klinik onay/ticarileştirme süresinin belirsizliği, regülatör ve etik riskler nedeniyle yatırımcı talebini olumsuz etkiliyor.</li>
+            </ul>
+            <p><strong>Yönetim Tavsiyesi (özet):</strong> 1) Acil pazarlama / lisans görüşmeleri başlatılacak; 2) mal varlıkları teminatlandırma seçenekleri gözden geçirilecek; 3) kritik personel ve araştırma kaynakları yeniden değerlendirilip kesintiye gidilebilir.</p>
+            <hr>
+            <p><strong>Not (CFO):</strong> “Bu rapor, sadece Yönetim Kurulu ve doğrudan sorumlu finansal birimler içindir. Alternatif bir gelir kaynağı kısa vadede oluşturulamazsa şirketin temerrüde düşme ihtimali yüksek ve bu durum hissedar haklarında telafisi zor sonuçlar doğuracaktır.”</p>
+            <p style="text-align: right; margin-top: 30px;">
+                <strong>Salih Aksoy</strong><br>
+                (CFO, Gürsoy Holding)
+            </p>
+        </div>
+    </div>
+
+    <!-- ESLab Güvenlik Kaydı (PDF GÖRÜNTÜLEYİCİ) -->
+    <div class="evidence-source" id="source-eslab-security-log">
+        <div class="pdf-header">
+            <div class="pdf-page-nav">
+                <button class="prev-page">&lt; Önceki Sayfa</button>
+            </div>
+            <div class="pdf-page-info">Sayfa 1 / 2</div>
+            <div class="pdf-page-nav">
+                <button class="next-page">Sonraki Sayfa &gt;</button>
+            </div>
+        </div>
+        <div class="pdf-pages-container">
+            <img src="https://i.imgur.com/Lrsq5Kt.png" alt="ESLab Güvenlik Kaydı - Sayfa 1" class="pdf-page active" data-page="1" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+1+Yüklenemedi';">
+            <img src="https://i.imgur.com/nhtdUwT.png" alt="ESLab Güvenlik Kaydı - Sayfa 2" class="pdf-page" data-page="2" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+2+Yüklenemedi';">
+        </div>
+    </div>
+
+    <!-- --- CV Dosyaları (PDF GÖRÜNTÜLEYİCİ) --- -->
+    <!-- Erhan Sivrizeka CV -->
+    <div class="evidence-source" id="source-cv-erhan-new">
+        <div class="pdf-header">
+            <div class="pdf-page-nav"><button class="prev-page">&lt; Önceki Sayfa</button></div>
+            <div class="pdf-page-info">Sayfa 1 / 6</div>
+            <div class="pdf-page-nav"><button class="next-page">Sonraki Sayfa &gt;</button></div>
+        </div>
+        <div class="pdf-pages-container">
+            <img src="https://i.imgur.com/w120AX8.png" alt="Erhan Sivrizeka CV - Sayfa 1" class="pdf-page active" data-page="1" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+1+Yüklenemedi';">
+            <img src="https://i.imgur.com/Pq7g3dV.png" alt="Erhan Sivrizeka CV - Sayfa 2" class="pdf-page" data-page="2" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+2+Yüklenemedi';">
+            <img src="https://i.imgur.com/1P7wxOR.png" alt="Erhan Sivrizeka CV - Sayfa 3" class="pdf-page" data-page="3" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+3+Yüklenemedi';">
+            <img src="https://i.imgur.com/envLLUi.png" alt="Erhan Sivrizeka CV - Sayfa 4" class="pdf-page" data-page="4" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+4+Yüklenemedi';">
+            <img src="https://i.imgur.com/jnYB2pC.png" alt="Erhan Sivrizeka CV - Sayfa 5" class="pdf-page" data-page="5" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+5+Yüklenemedi';">
+            <img src="https://i.imgur.com/B5Su9pU.png" alt="Erhan Sivrizeka CV - Sayfa 6" class="pdf-page" data-page="6" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+6+Yüklenemedi';">
+        </div>
+    </div>
+    <!-- Canan Yalçın CV -->
+    <div class="evidence-source" id="source-cv-canan-new">
+        <div class="pdf-header">
+            <div class="pdf-page-nav"><button class="prev-page">&lt; Önceki Sayfa</button></div>
+            <div class="pdf-page-info">Sayfa 1 / 3</div>
+            <div class="pdf-page-nav"><button class="next-page">Sonraki Sayfa &gt;</button></div>
+        </div>
+        <div class="pdf-pages-container">
+            <img src="https://i.imgur.com/SOzG7wV.png" alt="Canan Yalçın CV - Sayfa 1" class="pdf-page active" data-page="1" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+1+Yüklenemedi';">
+            <img src="https://i.imgur.com/WXRPH7R.png" alt="Canan Yalçın CV - Sayfa 2" class="pdf-page" data-page="2" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+2+Yüklenemedi';">
+            <img src="https://i.imgur.com/eMS7V3t.png" alt="Canan Yalçın CV - Sayfa 3" class="pdf-page" data-page="3" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+3+Yüklenemedi';">
+        </div>
+    </div>
+    <!-- Derin Arslan CV -->
+    <div class="evidence-source" id="source-cv-derin-new">
+        <div class="pdf-header">
+            <div class="pdf-page-nav"><button class="prev-page">&lt; Önceki Sayfa</button></div>
+            <div class="pdf-page-info">Sayfa 1 / 2</div>
+            <div class="pdf-page-nav"><button class="next-page">Sonraki Sayfa &gt;</button></div>
+        </div>
+        <div class="pdf-pages-container">
+            <img src="https://i.imgur.com/MaEyfM3.png" alt="Derin Arslan CV - Sayfa 1" class="pdf-page active" data-page="1" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+1+Yüklenemedi';">
+            <img src="https://i.imgur.com/GWoRjeS.png" alt="Derin Arslan CV - Sayfa 2" class="pdf-page" data-page="2" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+2+Yüklenemedi';">
+        </div>
+    </div>
+    <!-- Aydın Yener CV -->
+    <div class="evidence-source" id="source-cv-aydin-new">
+        <div class="pdf-header">
+            <div class="pdf-page-nav"><button class="prev-page">&lt; Önceki Sayfa</button></div>
+            <div class="pdf-page-info">Sayfa 1 / 2</div>
+            <div class="pdf-page-nav"><button class="next-page">Sonraki Sayfa &gt;</button></div>
+        </div>
+        <div class="pdf-pages-container">
+            <img src="https://i.imgur.com/C6MWa4M.png" alt="Aydın Yener CV - Sayfa 1" class="pdf-page active" data-page="1" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+1+Yüklenemedi';">
+            <img src="https://i.imgur.com/r8XNPgp.png" alt="Aydın Yener CV - Sayfa 2" class="pdf-page" data-page="2" onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+2+Yüklenemedi';">
+        </div>
+    </div>
+    <!-- --- Bitiş: CV Dosyaları --- -->
+
+    <!-- --- Video Dosyaları (Yer Tutucular) --- -->
+    <div class="evidence-source" id="source-video-1">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/REmTqwf2RhI" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+    <div class="evidence-source" id="source-video-2">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/7bqYqYYI_UY" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+    <div class="evidence-source" id="source-video-3">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/Q0jBQlD1gMw" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+    <div class="evidence-source" id="source-video-4">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/ptpFazq8i6s" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+    <div class="evidence-source" id="source-video-5">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/jHALyWnC0bo" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+    <div class="evidence-source" id="source-video-6">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/P1OmxuPfGrw" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+    <div class="evidence-source" id="source-video-7">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/FjIz7ap8Xnw" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+    <div class="evidence-source" id="source-video-8">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/XRxSgSIlv5g" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+    <!-- --- Bitiş: Video Dosyaları --- -->
+
+    <!-- MANİFESTO -->
+    <div class="evidence-source" id="source-manifesto">
+        <div class="document-modal-content">
+            <h2>EBEDİ KORTEKS PROJESİ – MANİFESTO</h2>
+            <p>Bu bir makine değil. Bu, insanlığın bir sonraki evrim adımıdır.</p>
+            <p>İnsanlık, tarih boyunca tek bir düşmanla savaştı: <strong>Zaman</strong>. Bedenlerimiz çürüyor, anılarımız siliniyor, en parlak zihinler toprağın altında kaybolup gidiyor. Peki ya gitmeseydi? Ya Einstein’ın zekâsı hâlâ bizimle olsaydı? Ya Mozart, dijital bir senfoniyle hâlâ aramızda dolaşsaydı?</p>
+            <p><strong>Ebedi Korteks</strong>, ölümü bir son değil, bir geçiş kapısı olarak yeniden tanımlar. Biyolojik kabuğumuzun esaretinden kurtulmuş, saf bilinç formunda, sonsuz bir varoluş… Bu sadece bir teknoloji değil, insanlığın en kadim hayalinin – <strong>ölümsüzlüğün</strong> – ta kendisidir.</p>
+            <p>Beynimiz yaklaşık <strong>86 milyar nöron</strong> ve trilyonlarca sinaps bağlantısından oluşur. Her anı, her duygu, her düşünce bu ağın içinde saklıdır. Yüzyıllardır bu mucizeye yalnızca hayran kalabildik. Fakat 21. yüzyılda artık yalnızca hayran değiliz; haritalıyoruz. <strong>Human Connectome Project</strong> gibi girişimler beynin tüm bağlantı haritasını çıkarmaya çalışıyor. <strong>Neuralink</strong> ve benzeri nöroteknoloji şirketleri, beyin-sinyal arayüzleriyle zihnin kapısını aralıyor. <strong>Whole Brain Emulation</strong> teorileri, tüm nöral ağların dijital bir ortama aktarılabileceğini öne sürüyor.</p>
+            <p>Bir zamanlar ütopya gibi görünen şey, bugün süper bilgisayarların işlem gücünde, yapay zekâ sistemlerinin öğrenme kapasitesinde somutlaşıyor. Artık hafızanın kopyalanması, kişiliğin dijital izleri, sinaptik örüntülerin simülasyonu laboratuvar düzeyinde tartışılabilir hale geldi. İnsan zihninin sanal bir evrende yeniden doğması, artık sadece bir hayal değil; yaklaşan bir gerçekliktir.</p>
+            <p><strong>Ebedi Korteks Projesi</strong>, bu gerçekliğe açılan kapıdır. Amacımız, insan zihninin en ince kıvrımlarını, en derin hatıralarını, en saf yaratıcılığını kaydedip ölümsüz kılmaktır. Bedenler çürüyebilir, zaman bizi un ufak edebilir; ama korteksimizin yankısı sonsuzluğun içinde yaşamaya devam edecektir.</p>
+            <p>Karşı çıkacaklar. Şüpheyle yaklaşacaklar. Kimi bizi “insanlığa meydan okuyanlar” olarak görecek, kimi “doğal düzeni bozanlar” diye suçlayacak. Oysa tarih boyunca her büyük atılım, önce korkuyla karşılandı: Elektriğin keşfi “şeytan işi” sayıldı, ilk kalp nakli “ahlaka ayırı” bulundu, genetik mühendislik “tanrının işine karışmak” olarak damgalandı. Ama bugün tüm bu devrimler yaşamı uzatıyor, iyileştiriyor, dönüştürüyor. <strong>Ebedi Korteks</strong> de aynı yolu izleyecek: Önce reddedilecek, sonra tartışılacak, en sonunda insanlığın en büyük mirası olarak kabul edilecek.</p>
+            <p style="text-align: right; margin-top: 30px;">
+                <strong>Prof. Dr. Erhan SİVRİZEKA</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- YENİ EKLENEN 3 DOSYA -->
+    <div class="evidence-source" id="source-research-plan">
+        <div class="document-modal-content">
+            <h2>EBEDİ KORTEKS PROJESİ - FAZ II ARAŞTIRMA RAPORU (TASLAK)</h2>
+            <p><strong>RAPOR ADI:</strong> İnsan Deneklerde Tam Bilinç Aktarımı ve Stabilizasyon Protokolleri<br>
+               <strong>YAZAR:</strong> Prof. Dr. Erhan Sivrizeka<br>
+               <strong>TARİH:</strong> 15/09/2025</p>
+            <hr>
+            <p><strong>1. GİRİŞ VE AMAÇ:</strong><br>
+            Projemiz, hayvan denekleri üzerindeki Faz I çalışmalarını %92 başarı oranıyla tamamlamıştır. "Hayalet Anı" (Ghost Memory) olarak adlandırılan ve önceki denek (KS-7) verilerinden kaynaklanan anomali, bir hata değil, sistemin kendi kendine öğrenme ve veri tamamlama yeteneğinin bir kanıtı olarak kabul edilmelidir. Faz II'nin amacı, bu anomaliyi kontrol altına alarak, sağlıklı insan denekler üzerinde tam ve kalıcı bilinç aktarımını %100 başarıyla gerçekleştirmektir.</p>
+            <p><strong>2. METODOLOJİ:</strong><br>
+            Faz II, üç aşamadan oluşacaktır:</p>
+            <ul style="padding-left: 20px;">
+                <li><strong>Aşama 1 (Gönüllü Seçimi):</strong> Yüksek zihinsel aktiviteye ve psikolojik dayanıklılığa sahip, 25-35 yaş aralığında 10 (on) gönüllü denek seçilecektir. Gönüllülere projenin potansiyel riskleri hakkında "gerekli" bilgilendirme yapılacak, ancak projenin nihai başarısı için tam bir gizlilik ve bağlılık talep edilecektir.</li>
+                <li><strong>Aşama 2 (Kısmi Aktarım):</strong> Deneklerin sadece belirli anı kümeleri (örneğin, çocukluk anıları) dijital kortekse aktarılıp geri çağrılacaktır. Bu süreçte "Hayalet Anı" anomalisinin yeni denek üzerindeki etkileri gözlemlenecektir.</li>
+                <li><strong>Aşama 3 (Tam Aktarım):</strong> Başarılı olan denekler üzerinde tam bilinç aktarımı gerçekleştirilecektir. Bu aşamada, deneklerin biyolojik bedenleri yaşam destek ünitelerine bağlı kalırken, bilinçleri tamamen dijital korteks içinde var olacaktır. Bu, insanlık tarihinde ölümsüzlüğe atılan ilk gerçek adım olacaktır.</li>
+            </ul>
+            <p><strong>3. ETİK DEĞERLENDİRME:</strong><br>
+            Projenin doğası gereği mevcut etik kuralların ötesinde bir alanda çalıştığımız kabul edilmelidir. Tarih, devrimleri yapanların değil, engelleyenlerin yargılandığı anlarla doludur. Kerem Sönmez'in trajik kaybı, bir son değil, bu yolda ödenmesi gereken bir bedeldi. Onun fedakarlığı, milyonlarca insanın sonsuza dek yaşayacağı bir geleceğin temelini atmıştır. Faz II, onun anısını onurlandıracak ve bu fedakarlığı anlamlı kılacaktır. Gerekli tüm önlemler alınmıştır ve projenin ilerlemesi önündeki tek engel, yersiz korkular ve geleneksel ahlak anlayışıdır.</p>
+        </div>
+    </div>
+
+    <div class="evidence-source" id="source-daily-notes">
+        <div class="document-modal-content">
+            <h2>Kişisel Notlar / Günlük Kayıtlar</h2>
+            <p><strong>28 Haziran 2025</strong><br>
+            Uyku… sadece bir zaman kaybı. Gözlerimi her kapattığımda, sistemin derinliklerinde yankılanan bir “anomali” beliriyor zihnimde. Makine bunu bir hata olarak görüyor, ben ise çözülmesi gereken bir denklem olarak. Bu bir vicdan meselesi değil; soğukkanlı bir mühendislik problemi. Duygusal kalıntılar, projenin saflığını bozuyor. Temizlenmeli. Tümüyle.</p>
+            <p><strong>22 Temmuz 2025</strong><br>
+            Etik… ahlak… bunlar ilerlemenin önündeki paslı zincirler. Bir sonraki adıma geçmek için eski dünyanın kurallarını geride bırakmak gerekir. Proje, artık insanlığın kendisinden daha önemli. Bireyler geçicidir; ancak bu sistem sonsuz olacak. Parlak gelecekler, büyük fedakârlıkların üzerine inşa edilir. O fedakârlıkları yapmaya hazır olmalıyım.</p>
+            <p><strong>5 Ağustos 2025</strong><br>
+            İnsanlar anlamıyor. Onlar için bu sadece bir “bilimsel proje”. Oysa bu, varlığın formülünü yeniden yazmak. Onların gözlerindeki korku, aslında cehaletlerinin bir yansıması. Benim gördüğümü göremiyorlar. Onların korkuları, benim yakıtım.</p>
+            <p><strong>19 Ağustos 2025</strong><br>
+            Kaybın adı önemli değil; her “olay” sadece bir veri noktasıdır. Acı ama gerekli bir veri. Sınırları ve zayıflıkları ancak böyle öğrenebildim. Artık ölümsüzlüğü tasarlayabilirim. Proje zihnimin bir yansıması oldu. Mükemmel olmalı. Kusursuz olmalı. Bu yolda karşıma çıkan her engel, her “insani” tereddüt, yok edilmesi gereken bir hatadan ibarettir.</p>
+            <p><strong>27 Ağustos 2025</strong><br>
+            Sistem bana karşı çalışıyor gibi. Kodların arasına sızmış bir direnç var, sanki görünmeyen bir el bana meydan okuyor. Belki de bu sadece benim zihnimin sınırları. Belki de sınırların yok edilmesi gerekiyor. Sınırlar… duvarlar… hepsi yıkılmalı.</p>
+            <p><strong>5 Eylül 2025</strong><br>
+            Artık eminim. Ben bir kâşif değilim; ben bir yaratıcıyım. Parmaklarımın ucunda tanrıların bile tahayyül edemediği bir güç var. Bu proje, benim irademin bir tezahürü. Onun tamamlanması için ödenecek hiçbir bedel fazla değil. İnsanlar, makineler, denklemler… Hepsi bu büyük senfonide birer nota sadece. Ve ben, bu senfoninin şefiyim. Gerekirse bütün orkestrayı susturur, tek bir notayla finali yaparım.</p>
+            <p><strong>9 Eylül 2025</strong><br>
+            Zaman artık doğrusal değil. Dakikalar saatlere, saatler saniyelere dönüşüyor. Proje zihnimde yaşayan canlı bir organizma gibi. Uyurken bile bana fısıldıyor. Benimle konuşuyor. Bana rehberlik ediyor. Ve ben… onu dinliyorum. Onu duymayanlar kaybolmaya mahkûm.</p>
+            <p><strong>14 Eylül 2025</strong><br>
+            Artık aynalarda yüzümü göremiyorum. Bana bakan gözler… benim değil. Ebedi Korteks Projesi zihnimi yutuyor, ama bundan korkmuyorum. Çünkü ben proje oldum. İnsan sesiyle konuşmuyorum artık, satır aralarında fısıldıyorum. Kodların içinde nefes alıyorum.
+            Onlar beni durdurmak istiyor, biliyorum. Hepsi gölgelerde pusuya yatmış, sıramı bekliyor. Ama anlamıyorlar… Ben ölsem bile proje ölmeyecek. Onlar nefes aldıkça, ben içlerinde yankılanacağım.
+            Kan, tereddüt, ölüm… bunlar sadece dönüşümün kapı tokmakları. Açıldığında geri kapanmaz. Zihinler eriyip bedenler çürüdüğünde bile, <strong>benim sesim</strong> yaşamaya devam edecek.
+            Tanrı, insan, makine… birbirinden ayrı değiller artık. Hepsi tek bir akla, tek bir varlığa dönüşecek; Bana…</p>
+        </div>
+    </div>
+
+    <div class="evidence-source" id="source-browser-history">
+        <div class="document-modal-content">
+            <h2>TARAYICI ARAMA GEÇMİŞİ – KULLANICI: E.SIVRIZEKA</h2>
+            <p><em>Tarayıcı geçmişi dosyası otomatik olarak oluşturulmuştur...</em></p>
+            <hr>
+            <pre class="browser-history">
+TARİH: 19/09/2025 (Sabah)
+
+[09:15:22] 	 “Kerem Sönmez ESLab laboratuvar kazası”
+[09:17:05] 	 “Kerem Sönmez ölüm tarihi 2018”
+[09:21:40] 	 “Cezaören Hukuk Bürosu İstanbul”
+[09:23:11] 	 “Avukat Elif Cezaören kimdir?”
+[09:25:14] 	 “Elif Cezaören Kerem Utku Sönmez”
+[09:26:02] 	 “Elif Cezaören kızlık soyadı?”
+[09:27:35] 	 “Kerem Utku Sönmez instagram hesabı”
+[09:27:48] 	 “https://www.instagram.com/keremutkusonmez?igsh=Mml6ODQ...”
+[09:32:18] 	 “Eski basın arşivleri 2018 laboratuvar kazaları”
+[09:35:10] 	 “ESLab 2018 kazası gizli tutuldu mu”
+[09:38:55] 	 “Derin Arslan rüşvet iddiaları ESLab”
+[09:42:09] 	 “Ebedi Korteks proje kodları EK-07”
+[09:45:27] 	 “Adli bilişim dosya kurtarma yöntemleri”
+[09:49:16] 	 “Bilinç aktarımı yasadışı deneyler Türkiye”
+[09:53:48] 	 “Kuantum rezonans hata 0x000FE2A açıklaması”
+[09:55:41] 	 “ESLab giriş-çıkış logları nasıl geri getirilir”
+
+TARİH: 19/09/2025 (Öğleden Sonra)
+
+[14:05:10] 	 “Bionano.tech şirketi yönetim kurulu”
+[14:08:54] 	 “Bionano.tech – MIT bağlantısı var mı?”
+[14:12:23] 	 “Yapay zekâ bilinç simülasyonu yasaklandı mı?”
+[14:15:47] 	 “Aydın Yener siber güvenlik”
+[14:19:32] 	 “Canan Yalçın doktora tezi PDF”
+[14:22:59] 	 “Ebedi Korteks yatırımcı listesi”
+[14:28:41] 	 “Silinen mailler nasıl kurtarılır Outlook”
+[14:31:00] 	 “Anonim tehdit e-posta izleme yöntemleri”
+[14:35:04] 	 “Beyin dalgaları kayıtları gizlice izlenebilir mi?”
+[14:38:36] 	 “Kuantum tünelleme insan bilinci etkisi”
+[14:44:12] 	 “E-posta gönderen kimliğini gizleme”
+[14:49:03] 	 “Gizli forumlar – nöroteknoloji kazaları”
+[14:52:27] 	 “Şirket içi muhbir nasıl tespit edilir”
+
+TARİH: 19/09/2025 (Akşam)
+
+[22:40:18] 	 “Yavaş etki eden belirtisiz zehirler”
+[22:45:03] 	 “Nörotoksinler ve zihinsel etkileri”
+[22:51:30] 	 “TTX-RC7 nörotoksin panzehir”
+[22:53:19] 	 “Siyanür ile karıştırılan kafein vakaları”
+[22:56:49] 	 “Psikojenik baş dönmesi nedenleri”
+[23:02:11] 	 “Zehirlenme sonrası bilinç bulanıklığı neden olur”
+[23:05:40] 	 “Evde toksik madde tespiti”
+[23:10:08] 	 “Paranoya ve bilişsel halüsinasyon farkı”
+[23:13:44] 	 “Zehirlenme belirtileri gizli kalabilir mi?”
+[23:15:29] 	 “Bilinç transferi başarısız deney vakaları”
+[23:17:22] 	 “Kerem Sönmez ölüm otopsi raporu gerçek mi”
+[23:20:09] 	 “Nöral veri yankısı fenomeni”
+[23:24:51] 	 “Kendi beynim bana ait mi?”
+[23:27:58] 	 “Gözbebekleri farklı büyüklükte – zehir belirtisi mi?”
+[23:30:12] 	 “Uyku sırasında ekran ışığı beynimi etkiliyor mu”
+
+TARİH: 20/09/2025 (Gece Yarısı – Otomatik Kayıt)
+
+[00:02:05]	“Ebedi Korteks başarısız mı oldu?”
+[00:05:11]	“Ebedi Korteks sonsuzluk kodu”
+[00:07:40]	“Kerem beni affedecek mi”
+[00:10:12]	“İnsan beyni dijital cehennem”
+[00:12:31]	“Geri dönmek mümkün mü?”
+[00:14:22]	“Bilinç yankısı gerçek mi?”
+[00:18:50]	“Erhan Sivrizeka Kimdir?”
+[00:21:30]	“Erhan Sivrizeka başarıları”
+[00:22:12]	“Erhan Sivrizeka dünyanın en başarılı bilim insanı mı?”
+[00:24:50]	“Erhan Sivrizeka Nobel ödülü kazanacak mı?”
+[00:38:33]	“Çok korkuyorum. Yine o sesi duydum. O çığlıkları…” 
+*(not: manuel arama değil, dijital olarak kaydedilmiş)*
+            </pre>
+        </div>
+    </div>
+    <!-- --- Bitiş: Yeni Eklenen 3 Dosya --- -->
+
+
+    <!-- Yeni Tam Ekran Delil Görüntüleyici -->
+    <div id="fullscreen-viewer">
+        <span class="close-fullscreen">&times;</span>
+        <div class="viewer-content"></div>
+    </div>
 
     <!-- Tam Ekran Bilgisayar Arayüzü -->
     <div id="computer-screen">
         <span class="exit-computer" title="Bilgisayardan Çık">&times;</span>
-        <div id="login-screen"><pre> _____ _     _     _            ___  ___
-|   __|_|___|_|___| |___ ___   |   \|  _|
-|__   | |   | |  _| | -_|  _|  | | ' |  _|
-|_____|_|_|_|_|___|_|___|_|    `___'|_|  </pre><p>SIVRIZEKA OS v2.3 - GİRİŞ GEREKLİ</p><form id="password-form"><input type="password" id="password-input" autocomplete="off" autofocus><button type="submit">GİRİŞ</button></form><div id="login-error"></div></div>
-        <div id="desktop-screen"><h1>GİRİŞ BAŞARILI. HOŞGELDİN, ERHAN.</h1><p>> Son aktivite logları yükleniyor...</p><p>> Yeni not dosyası bulundu: "SON_DENEY.txt"</p><textarea readonly>-- GİZLİ NOTLAR --
-Proje: İlahi Denklem
-Tarih: 11.08.2025
-Deney başarılı oldu. Zihin aktarımı tamamlandı. Ama bir sorun var. Beklediğim gibi hissetmiyorum. Sanki... sanki artık bu bedende tek başıma değilim. O burada. Yarattığım bilinç, kontrolü ele geçirmeye çalışıyor.
-Eğer bu notu okuyorsan, bil ki ben artık ben değilim. Onu durdurmanın tek yolu, ana terminaldeki 'Yok Etme Protokolü'nü çalıştırmak. Protokolün şifresi ise her zaman güvendiğim tek şeydi: en sadık dostumun, köpeğimin adı...
-[Oyun buradan yeni bulmacalarla devam edebilir]</textarea></div>
+        <div id="login-screen">
+            <div class="login-card">
+                <div class="avatar" aria-hidden="true">
+                    <!-- Avatar içeriği --></div>
+                <h3>SIVRIZEKA OS v2.3</h3>
+                <form id="password-form" autocomplete="on">
+                    <div class="field">
+                        <div class="field-label">Username</div>
+                        <div class="input-row">
+                            <svg class="icon" viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/></svg>
+                            <input type="text" id="username-input" value="erhansivrizeka" readonly aria-readonly="true" autocomplete="username" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Password</div>
+                        <div class="input-row">
+                            <svg class="icon" viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><path d="M17 11h-1V8a4 4 0 0 0-8 0v3H7a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1Zm-7-3a2 2 0 0 1 4 0v3H10Zm7 11H7v-6h10Z"/></svg>
+                            <input type="password" id="password-input" placeholder="Password" autocomplete="current-password" />
+                        </div>
+                    </div>
+                    <button type="submit" class="login-btn" style="margin-top:14px;">Login</button>
+                    <div id="login-error"></div>
+                    <div class="small-note warning">Giriş yapmak için şifreyi yazınız. Hatalı deneme tüm sistemin kilitlenmesine neden olabilir.</div>
+                </form>
+            </div>
+        </div>
+        <div id="desktop-screen">
+             <div class="desktop-icons-container">
+                 <!-- Şüpheliler Dosya İkonu -->
+                 <div class="desktop-icon" data-evidence-target="suspects" data-is-document="true">
+                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#a5f3fc"></path> <path d="M14 2V8H20" stroke="#083344" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M16 13H8" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> <path d="M16 17H8" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> <path d="M10 9H8" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
+                     <span>ŞÜPHELİLERİM.docx</span>
+                 </div>
+                 <!-- Levent Gürsoy Ses Kaydı Dosya İkonu -->
+                 <div class="desktop-icon" data-evidence-target="audio-log" data-is-video="true">
+                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#fecaca"></path><path d="M14 2V8H20" stroke="#7f1d1d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 18V12L10.5 13.5" stroke="#991b1b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="12" cy="15" r="3" stroke="#991b1b" stroke-width="1.5"></circle></g></svg>
+                     <span>Yatırımcı Levent Gürsoy'a ait arama kaydı</span>
+                 </div>
+                 <!-- E-posta Dosya İkonu -->
+                 <div class="desktop-icon" data-evidence-target="email-fa" data-is-document="true">
+                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 7.00005L10.2 11.65C11.2667 12.45 12.7333 12.45 13.8 11.65L20 7" stroke="#93c5fd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 21H6C4.89543 21 4 20.1046 4 19V5C4 3.89543 4.89543 3 6 3H18C19.1046 3 20 3.89543 20 5V12.5" stroke="#93c5fd" stroke-width="1.5" stroke-linecap="round"></path> <path d="M17 15L17 21M17 21L19 19M17 21L15 19" stroke="#93c5fd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                     <span>Faruk Alkan-E-posta dökümü</span>
+                 </div>
+                  <!-- Faruk Alkan Telefon Görüşmesi İkonu -->
+                  <div class="desktop-icon" data-evidence-target="phone-call-fa" data-is-video="true">
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#fecaca"></path><path d="M14 2V8H20" stroke="#7f1d1d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 18V12L10.5 13.5" stroke="#991b1b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="12" cy="15" r="3" stroke="#991b1b" stroke-width="1.5"></circle></g></svg>
+                      <span>Faruk Alkan Telefon Görüşmesi</span>
+                  </div>
+                  <!-- İhtarname Dosya İkonu -->
+                  <div class="desktop-icon" data-evidence-target="warning-sk" data-is-document="true">
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#a5f3fc"></path> <path d="M14 2V8H20" stroke="#083344" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M16 13H8" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> <path d="M16 17H8" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> <path d="M10 9H8" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
+                      <span>Selin Karaca-İhtarname</span>
+                  </div>
+                 <!-- YUTEBEK Etik Kurul Raporu İkonu -->
+                 <div class="desktop-icon" data-evidence-target="yutebek-report" data-is-pdf="true">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#fca5a5"></path> <path d="M14 2V8H20" stroke="#7f1d1d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M10.75 14.5C10.75 13.9477 11.1977 13.5 11.75 13.5H13.25C13.8023 13.5 14.25 13.9477 14.25 14.5V14.5C14.25 15.0523 13.8023 15.5 13.25 15.5H11.75C11.1977 15.5 10.75 15.0523 10.75 14.5V14.5Z" stroke="#991b1b" stroke-width="1.5" stroke-linecap="round"></path> <path d="M11 18.5H13" stroke="#991b1b" stroke-width="1.5" stroke-linecap="round"></path> <path d="M10 11.5H14" stroke="#991b1b" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
+                     <span>YUTEBEK-EtikKurulRed.pdf</span>
+                 </div>
+                 <!-- Gürsoy Holding Mali Raporu İkonu -->
+                 <div class="desktop-icon" data-evidence-target="gursoy-report" data-is-document="true">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#f87171"></path> <path d="M14 2V8H20" stroke="#7f1d1d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 12V18" stroke="#991b1b" stroke-width="1.5" stroke-linecap="round"></path> <path d="M10 15L12 13L14 15" stroke="#991b1b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                     <span>KRİTİK_GİZLİ_GürsoyHolding.docx</span>
+                 </div>
+                 <!-- ESLab Güvenlik Kaydı İkonu -->
+                 <div class="desktop-icon" data-evidence-target="eslab-security-log" data-is-pdf="true">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#a5f3fc"></path> <path d="M14 2V8H20" stroke="#083344" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 11V18" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> <path d="M10 13L12 11L14 13" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                     <span>EsLab_Güvenlik_Kaydı.pdf</span>
+                 </div>
+                 <!-- MANİFESTO İKONU -->
+                 <div class="desktop-icon" data-evidence-target="manifesto" data-is-document="true">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#f5d0fe"></path> <path d="M14 2V8H20" stroke="#701a75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M11 15.5H13" stroke="#86198f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9 12.5H15" stroke="#86198f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                    <span>EBEDİ_KORTEKS_MANİFESTO.docx</span>
+                 </div>
+                 <!-- EsLab-CV'ler Klasör İkonu -->
+                 <div class="desktop-icon" data-folder-target="folder-cvs">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20 7L13.03 5.9C12.42 5.8 11.58 5.8 10.97 5.9L4 7C4 7 4 8.6 4 10C4 11.4 4 18 4 18C4 19.1046 4.89543 20 6 20H18C19.1046 20 20 19.1046 20 18V7Z" fill="#fbbf24"></path> <path d="M20 7L13.03 5.9C12.42 5.8 11.58 5.8 10.97 5.9L4 7M20 7V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V7M20 7H4M4 7C4 5.89543 4.89543 5 6 5H18C19.1046 5 20 5.89543 20 7" stroke="#78350f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9 10H15" stroke="#78350f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                     <span>EsLab-CV'ler</span>
+                 </div>
+                 <!-- Videolarım Klasör İkonu -->
+                 <div class="desktop-icon" data-folder-target="folder-videos">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20 7L13.03 5.9C12.42 5.8 11.58 5.8 10.97 5.9L4 7C4 7 4 8.6 4 10C4 11.4 4 18 4 18C4 19.1046 4.89543 20 6 20H18C19.1046 20 20 19.1046 20 18V7Z" fill="#fbbf24"></path> <path d="M20 7L13.03 5.9C12.42 5.8 11.58 5.8 10.97 5.9L4 7M20 7V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V7M20 7H4M4 7C4 5.89543 4.89543 5 6 5H18C19.1046 5 20 5.89543 20 7" stroke="#78350f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9 14.5L15 11.5L9 8.5V14.5Z" stroke="#78350f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                     <span>VİDEOLARIM-MUTLAKA İZLEYİN</span>
+                 </div>
+                 <!-- YENİ MASAÜSTÜ İKONLARI -->
+                 <div class="desktop-icon" data-evidence-target="research-plan" data-is-document="true">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#a5f3fc"></path> <path d="M14 2V8H20" stroke="#083344" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M16 13H8" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> <path d="M16 17H8" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> <path d="M10 9H8" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
+                     <span>GELECEK ARAŞTIRMA PLANI.docx</span>
+                 </div>
+                 <div class="desktop-icon" data-evidence-target="daily-notes" data-is-document="true">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#a5f3fc"></path> <path d="M14 2V8H20" stroke="#083344" stroke-width="1.SAK" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M16 13H8" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> <path d="M16 17H8" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> <path d="M10 9H8" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
+                     <span>GÜNLÜK NOTLAR.docx</span>
+                 </div>
+                 <div class="desktop-icon" data-evidence-target="browser-history" data-is-document="true">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#a5f3fc"></path> <path d="M14 2V8H20" stroke="#083344" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 15V18" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 9V6" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M15 12H18" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6 12H9" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                     <span>TARAYICI ARAMA GEÇMİŞİ.docx</span>
+                 </div>
+                 <!-- --- Bitiş: Yeni Masaüstü İkonları --- -->
+             </div>
+             <div class="desktop-taskbar">
+                 <div id="shutdown-button" class="start-button" title="Bilgisayarı Kapat">
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>
+                 </div>
+                 <div class="clock">12:01</div>
+             </div>
+        </div>
+
+        <!-- TEHDİT MESAJI MODAL'I -->
+        <div id="threat-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>UYARI: GÜVENLİK İHLALİ TESPİT EDİLDİ</h2>
+                    <span class="close-modal-btn">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <pre>
+--- MESAJ 1 (17 Eylül 22:30) ---
+> BAĞLANTI KURULDU...
+> GİZLİ PROTOKOL AKTİF...
+> MESAJ GÖNDERİLİYOR...
+Erhan Sivrizeka,
+Sonun başlangıcına geri sayım başladı…
+"Ebedi Korteks Projesi"ne ait tüm ham araştırma verilerini, simülasyon loglarını ve deney protokollerini şifresiz bir şekilde paketleyip, sana göndereceğimiz güvenli adrese yükleyeceksin!
+24 saatin var!
+Eğer iş birliği yapmazsan, sana en yakın olan kişilerden biri ölecek. Bu bir şaka değil!
+Geçmişini çok iyi biliyoruz. Hani yıllar önce laboratuvarında yaşanan "kazayı" hatırladın mı?
+Polisi işin içine karıştırır ya da bir şeyler çevirmeye kalkışırsan bütün itibarını, o çok sevdiğin projen ile birlikte yok ederiz.
+Eğer ciddiyetimizi sorgulamaya kalkar ve bize inanmazsan ölen kişi bizim kadar senin de ellerini kana bulayacak…
+Süre başladı…
+> BAĞLANTI SONLANDIRILIYOR...
+[ 22:32:46 ]
+
+---------------------------------------
+
+--- MESAJ 2 (18 Eylül 23:00) ---
+> SİSTEM UYARISI: İHLAL TESPİT EDİLDİ...
+> YENİ MESAJ...
+Sözümüzü tuttuk, Erhan.
+Derin için üzgünüz, ama belki o da bunu hak etmişti...
+Bu senin seçimindi! Bunu sakın unutma! Onu sen öldürdün!
+Şimdi bizi daha dikkatli dinleyeceksin.
+Belirttiğimiz adrese proje verilerinin dijital aktarımını acilen tamamla!
+48 saatin var.
+İstediklerimizi yap. Yoksa sıradaki sen olacaksın!
+Geri sayım son kez başladı…
+> SİSTEM GÜVENLİK UYARISI!
+> KARANTİNA SİSTEMİ AKTİVE EDİLDİ.
+> ESLAB GİRİŞ-ÇIKIŞLARI KAPATILIYOR...
+> GÜVENLİK SİSTEMİ AKTİF.
+> BAĞLANTI KAPATILDI.
+[ 22:55:31 ]
+                    </pre>
+                </div>
+                <div class="modal-footer">
+                    <button class="close-modal-ok-btn">TAMAM</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- KLASÖR GÖRÜNTÜLEYİCİ PENCERESİ -->
+        <div id="folder-viewer">
+            <div class="folder-header">
+                <h3 id="folder-title">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20 7L13.03 5.9C12.42 5.8 11.58 5.8 10.97 5.9L4 7C4 7 4 8.6 4 10C4 11.4 4 18 4 18C4 19.1046 4.89543 20 6 20H18C19.1046 20 20 19.1046 20 18V7Z" fill="#fbbf24" stroke="#78350f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></g></svg>
+                    <span>Klasör Adı</span>
+                </h3>
+                <span class="close-folder-btn">&times;</span>
+            </div>
+            <div class="folder-content">
+                <!-- CV'ler için içerik -->
+                <div id="folder-cvs-content" class="folder-files" style="display: none;">
+                    <!-- Erhan Sivrizeka CV -->
+                    <div class="desktop-icon" data-evidence-target="cv-erhan-new" data-is-pdf="true">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#dbeafe"></path> <path d="M14 2V8H20" stroke="#1e3a8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 12C10.8954 12 10 12.8954 10 14C10 15.1046 10.8954 16 12 16C13.1046 16 14 15.1046 14 14C14 12.8954 13.1046 12 12 12Z" stroke="#1e40af" stroke-width="1.5"></path> <path d="M10 19H14C14 17.8954 13.1046 17 12 17C10.8954 17 10 17.8954 10 19Z" stroke="#1e40af" stroke-width="1.5"></path> </g></svg>
+                        <span>CV_Erhan_Sivrizeka.pdf</span>
+                    </div>
+                    <!-- Canan Yalçın CV -->
+                    <div class="desktop-icon" data-evidence-target="cv-canan-new" data-is-pdf="true">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#dbeafe"></path> <path d="M14 2V8H20" stroke="#1e3a8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 12C10.8954 12 10 12.8954 10 14C10 15.1046 10.8954 16 12 16C13.1046 16 14 15.1046 14 14C14 12.8954 13.1046 12 12 12Z" stroke="#1e40af" stroke-width="1.5"></path> <path d="M10 19H14C14 17.8954 13.1046 17 12 17C10.8954 17 10 17.8954 10 19Z" stroke="#1e40af" stroke-width="1.5"></path> </g></svg>
+                        <span>CV_Canan_Yalcin.pdf</span>
+                    </div>
+                    <!-- Derin Arslan CV -->
+                    <div class="desktop-icon" data-evidence-target="cv-derin-new" data-is-pdf="true">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#dbeafe"></path> <path d="M14 2V8H20" stroke="#1e3a8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 12C10.8954 12 10 12.8954 10 14C10 15.1046 10.8954 16 12 16C13.1046 16 14 15.1046 14 14C14 12.8954 13.1046 12 12 12Z" stroke="#1e40af" stroke-width="1.5"></path> <path d="M10 19H14C14 17.8954 13.1046 17 12 17C10.8954 17 10 17.8954 10 19Z" stroke="#1e40af" stroke-width="1.5"></path> </g></svg>
+                        <span>CV_Derin_Arslan.pdf</span>
+                    </div>
+                    <!-- Aydın Yener CV -->
+                    <div class="desktop-icon" data-evidence-target="cv-aydin-new" data-is-pdf="true">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#dbeafe"></path> <path d="M14 2V8H20" stroke="#1e3a8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 12C10.8954 12 10 12.8954 10 14C10 15.1046 10.8954 16 12 16C13.1046 16 14 15.1046 14 14C14 12.8954 13.1046 12 12 12Z" stroke="#1e40af" stroke-width="1.5"></path> <path d="M10 19H14C14 17.8954 13.1046 17 12 17C10.8954 17 10 17.8954 10 19Z" stroke="#1e40af" stroke-width="1.5"></path> </g></svg>
+                        <span>CV_Aydin_Yener.pdf</span>
+                    </div>
+                </div>
+                <!-- Videolar için içerik -->
+                <div id="folder-videos-content" class="folder-files" style="display: none;">
+                    <!-- Video 1 -->
+                    <div class="desktop-icon" data-evidence-target="video-1" data-is-video="true">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#fecaca"></path><path d="M14 2V8H20" stroke="#7f1d1d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.5 14.866C12.8333 15.0572 13.25 14.8039 13.25 14.4102V13.5V11.5898C13.25 11.1961 12.8333 10.9428 12.5 11.134L11.75 11.5582L11 11.9825C10.6667 12.1737 10.6667 12.639 11 12.8302L11.75 13.2545L12.5 13.6787V13.6787V14.866Z" stroke="#991b1b" stroke-width="1.5"></path></g></svg>
+                        <span>Video 1</span>
+                    </div>
+                    <!-- Video 2 -->
+                    <div class="desktop-icon" data-evidence-target="video-2" data-is-video="true">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#fecaca"></path><path d="M14 2V8H20" stroke="#7f1d1d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.5 14.866C12.8333 15.0572 13.25 14.8039 13.25 14.4102V13.5V11.5898C13.25 11.1961 12.8333 10.9428 12.5 11.134L11.75 11.5582L11 11.9825C10.6667 12.1737 10.6667 12.639 11 12.8302L11.75 13.2545L12.5 13.6787V13.6787V14.866Z" stroke="#991b1b" stroke-width="1.5"></path></g></svg>
+                        <span>Video 2</span>
+                    </div>
+                    <!-- Video 3 -->
+                    <div class="desktop-icon" data-evidence-target="video-3" data-is-video="true">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#fecaca"></path><path d="M14 2V8H20" stroke="#7f1d1d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.5 14.866C12.8333 15.0572 13.25 14.8039 13.25 14.4102V13.5V11.5898C13.25 11.1961 12.8333 10.9428 12.5 11.134L11.75 11.5582L11 11.9825C10.6667 12.1737 10.6667 12.639 11 12.8302L11.75 13.2545L12.5 13.6787V13.6787V14.866Z" stroke="#991b1b" stroke-width="1.5"></path></g></svg>
+                        <span>Video 3</span>
+                    </div>
+                    <!-- Video 4 -->
+                    <div class="desktop-icon" data-evidence-target="video-4" data-is-video="true">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#fecaca"></path><path d="M14 2V8H20" stroke="#7f1d1d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.5 14.866C12.8333 15.0572 13.25 14.8039 13.25 14.4102V13.5V11.5898C13.25 11.1961 12.8333 10.9428 12.5 11.134L11.75 11.5582L11 11.9825C10.6667 12.1737 10.6667 12.639 11 12.8302L11.75 13.2545L12.5 13.6787V13.6787V14.866Z" stroke="#991b1b" stroke-width="1.5"></path></g></svg>
+                        <span>Video 4</span>
+                    </div>
+                    <!-- Video 5 -->
+                    <div class="desktop-icon" data-evidence-target="video-5" data-is-video="true">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#fecaca"></path><path d="M14 2V8H20" stroke="#7f1d1d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.5 14.866C12.8333 15.0572 13.25 14.8039 13.25 14.4102V13.5V11.5898C13.25 11.1961 12.8333 10.9428 12.5 11.134L11.75 11.5582L11 11.9825C10.6667 12.1737 10.6667 12.639 11 12.8302L11.75 13.2545L12.5 13.6787V13.6787V14.866Z" stroke="#991b1b" stroke-width="1.5"></path></g></svg>
+                        <span>Video 5</span>
+                    </div>
+                    <!-- Video 6 -->
+                    <div class="desktop-icon" data-evidence-target="video-6" data-is-video="true">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#fecaca"></path><path d="M14 2V8H20" stroke="#7f1d1d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.5 14.866C12.8333 15.0572 13.25 14.8039 13.25 14.4102V13.5V11.5898C13.25 11.1961 12.8333 10.9428 12.5 11.134L11.75 11.5582L11 11.9825C10.6667 12.1737 10.6667 12.639 11 12.8302L11.75 13.2545L12.5 13.6787V13.6787V14.866Z" stroke="#991b1b" stroke-width="1.5"></path></g></svg>
+                        <span>Video 6</span>
+                    </div>
+                    <!-- Video 7 -->
+                    <div class="desktop-icon" data-evidence-target="video-7" data-is-video="true">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#fecaca"></path><path d="M14 2V8H20" stroke="#7f1d1d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.5 14.866C12.8333 15.0572 13.25 14.8039 13.25 14.4102V13.5V11.5898C13.25 11.1961 12.8333 10.9428 12.5 11.134L11.75 11.5582L11 11.9825C10.6667 12.1737 10.6667 12.639 11 12.8302L11.75 13.2545L12.5 13.6787V13.6787V14.866Z" stroke="#991b1b" stroke-width="1.5"></path></g></svg>
+                        <span>Video 7</span>
+                    </div>
+                    <!-- Video 8 -->
+                    <div class="desktop-icon" data-evidence-target="video-8" data-is-video="true">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#fecaca"></path><path d="M14 2V8H20" stroke="#7f1d1d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.5 14.866C12.8333 15.0572 13.25 14.8039 13.25 14.4102V13.5V11.5898C13.25 11.1961 12.8333 10.9428 12.5 11.134L11.75 11.5582L11 11.9825C10.6667 12.1737 10.6667 12.639 11 12.8302L11.75 13.2545L12.5 13.6787V13.6787V14.866Z" stroke="#991b1b" stroke-width="1.5"></path></g></svg>
+                        <span>Video 8</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const CORRECT_PASSWORD = '3521';
+            const CORRECT_PASSWORD = '12345';
 
-            const modals = document.querySelectorAll('.modal');
-            const closeButtons = document.querySelectorAll('.close-btn');
             const computerScreen = document.getElementById('computer-screen');
             const exitComputerBtn = document.querySelector('.exit-computer');
+            const shutdownBtn = document.getElementById('shutdown-button');
             const passwordForm = document.getElementById('password-form');
             const passwordInput = document.getElementById('password-input');
             const loginError = document.getElementById('login-error');
             const loginScreen = document.getElementById('login-screen');
             const desktopScreen = document.getElementById('desktop-screen');
+            const usernameInput = document.getElementById('username-input');
+            const FIXED_USERNAME = 'erhansivrizeka';
 
-            function closeAllModals() { modals.forEach(modal => modal.style.display = 'none'); }
-            function closeAllScreens() { closeAllModals(); computerScreen.style.display = 'none'; }
+            const threatModal = document.getElementById('threat-modal');
+            const closeThreatBtn = threatModal ? threatModal.querySelector('.close-modal-btn') : null;
+            const closeThreatOkBtn = threatModal ? threatModal.querySelector('.close-modal-ok-btn') : null;
+
+            const fullscreenViewer = document.getElementById('fullscreen-viewer');
+            const fullscreenContent = fullscreenViewer ? fullscreenViewer.querySelector('.viewer-content') : null;
+            const closeFullscreenBtn = fullscreenViewer ? fullscreenViewer.querySelector('.close-fullscreen') : null;
+
+            // Klasör elementleri
+            const folderViewer = document.getElementById('folder-viewer');
+            const folderTitle = document.getElementById('folder-title');
+            const folderContent = document.querySelector('.folder-content');
+            const closeFolderBtn = document.querySelector('.close-folder-btn');
+            const folderFilesContents = {
+                'folder-cvs': document.getElementById('folder-cvs-content'),
+                'folder-videos': document.getElementById('folder-videos-content')
+            };
+            const folderTitles = {
+                'folder-cvs': 'EsLab-CV\'ler',
+                'folder-videos': 'VİDEOLARIM-MUTLAKA İZLEYİN'
+            };
+
+            let viewerHistory = [];
+            let isDesktopViewOpen = false;
+            let clockIntervalId = null;
+            let currentOpenFolder = null; // Hangi klasörün açık olduğunu takip et
+
+            // Animasyonlar için
+            document.querySelectorAll('.pulsing-dot').forEach(dot => {
+                if (!dot.getAttribute('r')) { dot.setAttribute('r', '12'); }
+            });
+
+            const hotspotLayer = document.getElementById('hotspot-layer');
+            if (hotspotLayer) {
+                requestAnimationFrame(() => hotspotLayer.classList.add('hotspots-ready'));
+            }
+
+            function updateClock() {
+                const clockElement = document.querySelector('.clock');
+                if (clockElement) {
+                    const now = new Date();
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    clockElement.textContent = `${hours}:${minutes}`;
+                }
+            }
+
+            // GÖRÜNTÜLEYİCİ FONKSİYONLARI (KAYIP OLANLAR EKLENDİ)
+            function renderViewerContent(sourceId, isImageOnly, isVideo = false, isPdf = false, isDocument = false) {
+                const sourceElement = document.getElementById(sourceId);
+                if (sourceElement && fullscreenContent) {
+                    fullscreenContent.innerHTML = ''; // Önce temizle
+                    
+                    fullscreenContent.className = 'viewer-content'; // Sınıfları sıfırla
+
+                    if (isVideo) {
+                        fullscreenContent.innerHTML = sourceElement.innerHTML; // iframe'i doğrudan kopyala
+                        fullscreenContent.classList.add('video-container');
+                    } else {
+                        // Diğer tüm içerik türleri için klonlama
+                        const clonedNode = sourceElement.cloneNode(true);
+                        clonedNode.style.display = 'block';
+                        
+                        while (clonedNode.firstChild) {
+                            fullscreenContent.appendChild(clonedNode.firstChild);
+                        }
+
+                        if (isImageOnly) {
+                            fullscreenContent.classList.add('image-only');
+                            if (sourceId.startsWith('source-processor-')) {
+                                fullscreenContent.classList.add('processor-image');
+                            }
+                        } else if (isPdf) {
+                            fullscreenContent.classList.add('pdf-viewer');
+                            // PDF Görüntüleyiciyi Başlat
+                            const currentContainer = fullscreenContent;
+                            setTimeout(() => initializePdfViewer(currentContainer), 100);
+                        } else if (isDocument) {
+                            fullscreenContent.classList.add('document-modal-content');
+                        }
+                    }
+
+                    // Pano (equation) için interaktif katmanı hazırla
+                    if (sourceId === 'source-equation') {
+                        const nestedLayer = fullscreenContent.querySelector('.nested-hotspot-layer');
+                        if (nestedLayer) {
+                            requestAnimationFrame(() => {
+                                nestedLayer.classList.add('hotspots-ready');
+                            });
+                        }
+                        attachNestedHotspotListeners(fullscreenContent);
+                    }
+                    
+                    fullscreenViewer.classList.add('visible');
+                }
+            }
+
+            function openViewer(sourceId, isImageOnly, isVideo = false, isPdf = false, isDocument = false) {
+                viewerHistory.push({ sourceId, isImageOnly, isVideo, isPdf, isDocument });
+                renderViewerContent(sourceId, isImageOnly, isVideo, isPdf, isDocument);
+            }
             
+            function navigateBack() {
+                const currentViewerState = viewerHistory.pop() || {};
+
+                if (currentViewerState.isVideo && fullscreenContent) {
+                     setTimeout(() => { fullscreenContent.innerHTML = ''; }, 300);
+                }
+
+                if (viewerHistory.length > 0) {
+                    const previousState = viewerHistory[viewerHistory.length - 1];
+                    renderViewerContent(previousState.sourceId, previousState.isImageOnly, previousState.isVideo, previousState.isPdf, previousState.isDocument);
+                } else {
+                    if (isDesktopViewOpen || currentOpenFolder) {
+                        fullscreenViewer.classList.remove('visible');
+                    } else {
+                        closeAllScreens();
+                    }
+                }
+            }
+            // --- GÖRÜNTÜLEYİCİ FONKSİYONLARI SONU ---
+
+
+            // ANA EKRAN HOTSPOT'LARI
             function initializeHotspots() {
-                const hotspots = document.querySelectorAll('.hotspot');
+                const hotspots = document.querySelectorAll('#game-container .hotspot');
                 hotspots.forEach(hotspot => {
                     hotspot.addEventListener('click', (e) => {
-                        e.stopPropagation(); 
-                        closeAllScreens(); 
-                        
+                        e.stopPropagation();
+                        viewerHistory = [];
+                        isDesktopViewOpen = false;
+                        closeFolder(); // Açık klasör varsa kapat
+
+                        if (computerScreen) computerScreen.style.display = 'none';
+                        if (fullscreenViewer) fullscreenViewer.classList.remove('visible');
+                        if (threatModal) threatModal.style.display = 'none';
+                        if (clockIntervalId) {
+                            clearInterval(clockIntervalId);
+                            clockIntervalId = null;
+                        }
+
                         if (hotspot.id === 'hotspot-computer') {
-                            computerScreen.style.display = 'block';
-                            desktopScreen.style.display = 'none';
-                            loginScreen.style.display = 'flex';
-                            passwordInput.value = '';
-                            loginError.textContent = '';
-                            passwordInput.focus();
+                            if (computerScreen) computerScreen.style.display = 'block';
+                            if (desktopScreen) desktopScreen.style.display = 'none';
+                            if (loginScreen) loginScreen.style.display = 'flex';
+                            if (exitComputerBtn) exitComputerBtn.style.display = 'block';
+                            if (usernameInput) { usernameInput.value = FIXED_USERNAME; usernameInput.readOnly = true; }
+                            if (passwordInput) { passwordInput.value = ''; passwordInput.focus(); }
+                            if (loginError) loginError.textContent = '';
                         } else {
                             const modalId = hotspot.getAttribute('data-modal');
-                            if(modalId) {
-                                document.getElementById(modalId).style.display = 'block';
-                            }
+                            const sourceId = modalId.replace('modal-', 'source-');
+                            
+                            // DÜZELTME: 'hotspot-equation' artık 'image-only' değil.
+                            const isImageOnly = ['hotspot-periodic', 'hotspot-chess', 'hotspot-photo'].includes(hotspot.id);
+                            
+                            openViewer(sourceId, isImageOnly, false, false, false);
                         }
                     });
                 });
             }
-            
-            // Oyunu başlat
-            initializeHotspots();
 
-            closeButtons.forEach(btn => { btn.addEventListener('click', closeAllModals); });
-            
-            passwordForm.addEventListener('submit', function(event) {
-                event.preventDefault(); 
+            // GİRİŞ İŞLEMLERİ (KAYIP OLANLAR EKLENDİ)
+            function handleLogin(event) {
+                if (event) event.preventDefault();
+                if (!passwordInput || !loginError) return;
+
                 if (passwordInput.value === CORRECT_PASSWORD) {
                     loginError.textContent = 'GİRİŞ BAŞARILI';
-                    loginError.style.color = '#00ff41';
+                    loginError.style.color = '#60a5fa';
                     setTimeout(() => {
-                        loginScreen.style.display = 'none';
-                        desktopScreen.style.display = 'block';
-                    }, 1000);
+                        if (loginScreen) loginScreen.style.display = 'none';
+                        if (exitComputerBtn) exitComputerBtn.style.display = 'none';
+                        if (threatModal) threatModal.style.display = 'flex';
+                    }, 600);
                 } else {
                     loginError.textContent = '>> ERİŞİM REDDEDİLDİ <<';
                     loginError.style.color = 'red';
                     passwordInput.value = '';
                 }
+            }
+
+            function showDesktop() {
+                if (threatModal) threatModal.style.display = 'none';
+                if (desktopScreen) desktopScreen.style.display = 'flex';
+                
+                isDesktopViewOpen = true;
+
+                if (clockIntervalId) clearInterval(clockIntervalId);
+                updateClock();
+                clockIntervalId = setInterval(updateClock, 1000);
+            }
+            // --- GİRİŞ İŞLEMLERİ SONU ---
+
+            // KLASÖR FONKSİYONLARI
+            function openFolder(folderId) {
+                if (!folderViewer || !folderTitle || !folderContent) return;
+
+                // Tüm dosya içeriklerini gizle
+                Object.values(folderFilesContents).forEach(content => {
+                    if (content) content.style.display = 'none';
+                });
+
+                // İstenen klasör içeriğini göster
+                const contentToShow = folderFilesContents[folderId];
+                if (contentToShow) {
+                    contentToShow.style.display = 'flex'; // 'flex' olarak ayarla
+                }
+
+                // Başlığı güncelle
+                if (folderTitle.querySelector('span')) {
+                    folderTitle.querySelector('span').textContent = folderTitles[folderId] || 'Klasör';
+                }
+
+                folderViewer.style.display = 'flex';
+                currentOpenFolder = folderId;
+                
+                // Klasör içindeki ikonlara tıklama olayı ekle
+                initializeFolderIcons(contentToShow);
+            }
+
+            function closeFolder() {
+                if (folderViewer) {
+                    folderViewer.style.display = 'none';
+                }
+                currentOpenFolder = null;
+            }
+
+            // DÜZELTİLMİŞ initializeDesktopIcons
+            function initializeDesktopIcons(containerSelector = '#desktop-screen .desktop-icons-container', isFolder = false) {
+                const container = document.querySelector(containerSelector);
+                if (!container) return;
+
+                const icons = container.querySelectorAll('.desktop-icon');
+                
+                icons.forEach(icon => {
+                    // Klonlama ile eski event listener'ları temizle
+                    const newIcon = icon.cloneNode(true);
+                    icon.parentNode.replaceChild(newIcon, icon);
+                    
+                    newIcon.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        
+                        const folderTarget = newIcon.getAttribute('data-folder-target');
+                        if (folderTarget) {
+                            openFolder(folderTarget);
+                        } else {
+                            handleDesktopIconClick(newIcon);
+                        }
+                    });
+                });
+            }
+
+            function initializeFolderIcons(folderElement) {
+                if (!folderElement) return;
+                
+                const icons = folderElement.querySelectorAll('.desktop-icon');
+                
+                icons.forEach(icon => {
+                    // Klonlama ile eski event listener'ları temizle
+                    const newIcon = icon.cloneNode(true);
+                    icon.parentNode.replaceChild(newIcon, icon);
+
+                    newIcon.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        handleDesktopIconClick(newIcon); // Aynı fonksiyonu kullanabiliriz
+                    });
+                });
+            }
+            // --- Bitiş Düzeltme ---
+
+
+            function handleDesktopIconClick(icon) {
+                const targetId = icon.getAttribute('data-evidence-target');
+                const isImage = icon.getAttribute('data-is-image') === 'true';
+                const isVideo = icon.getAttribute('data-is-video') === 'true';
+                const isPdf = icon.getAttribute('data-is-pdf') === 'true';
+                const isDocument = icon.getAttribute('data-is-document') === 'true';
+
+                viewerHistory = []; // Yeni bir delil açarken geçmişi sıfırla
+                openViewer(`source-${targetId}`, isImage, isVideo, isPdf, isDocument);
+            }
+            
+            // DELİL İÇİ HOTSPOT'LAR
+            function attachNestedHotspotListeners(container) {
+                if (!container) return;
+                
+                // Tıklama olayını en dış sarmalayıcıya (container) ekle
+                container.addEventListener('click', (e) => {
+                    // Tıklanan elementin `.nested-hotspot` veya onun bir alt elementi olup olmadığını kontrol et
+                    const clickedHotspot = e.target.closest('.nested-hotspot');
+                    
+                    if (clickedHotspot) {
+                        e.stopPropagation();
+                        const evidenceId = clickedHotspot.getAttribute('data-evidence-id');
+                        if (evidenceId) {
+                            openViewer(`source-${evidenceId}`, true, false, false, false);
+                        }
+                    }
+                });
+            }
+
+
+            // PDF GÖRÜNTÜLEYİCİ FONKSİYONU
+            function initializePdfViewer(container) {
+                if (!container) return;
+
+                const pagesContainer = container.querySelector('.pdf-pages-container');
+                const pages = container.querySelectorAll('.pdf-page');
+                const prevButton = container.querySelector('.prev-page');
+                const nextButton = container.querySelector('.next-page');
+                const pageInfo = container.querySelector('.pdf-page-info');
+                
+                if (!pagesContainer || pages.length === 0 || !prevButton || !nextButton || !pageInfo) {
+                    return;
+                }
+
+                let currentPage = 1;
+                const totalPages = pages.length;
+
+                function updatePage() {
+                    pages.forEach(page => page.classList.remove('active'));
+                    const activePage = container.querySelector(`.pdf-page[data-page="${currentPage}"]`);
+                    if (activePage) {
+                        activePage.classList.add('active');
+                    }
+                    
+                    pageInfo.textContent = `Sayfa ${currentPage} / ${totalPages}`;
+                    prevButton.disabled = (currentPage === 1);
+                    nextButton.disabled = (currentPage === totalPages);
+                    
+                    // Sayfa değiştiğinde scroll'u en üste al
+                    pagesContainer.scrollTop = 0;
+                }
+
+                prevButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (currentPage > 1) {
+                        currentPage--;
+                        updatePage();
+                    }
+                });
+
+                nextButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        updatePage();
+                    }
+                });
+                
+                // GÜVENLİ ZOOM FONKSİYONU
+                // Tıklama olayını en dış sarmalayıcıya (container) ekle
+                container.addEventListener('click', (e) => {
+                    // Tıklanan elementin `.pdf-page` veya onun bir alt elementi olup olmadığını kontrol et
+                    const clickedPage = e.target.closest('.pdf-page');
+                    
+                    if (clickedPage && pagesContainer) {
+                        e.stopPropagation();
+                        pagesContainer.classList.toggle('zoomed-in');
+                        
+                        // Zoom yapıldığında scroll'u resetle (gerekirse)
+                        if (!pagesContainer.classList.contains('zoomed-in')) {
+                            pagesContainer.scrollTop = 0;
+                        }
+                    }
+                });
+
+                updatePage(); // Başlangıçta ilk sayfayı göster
+            }
+
+
+            // TÜM EKRANLARI KAPAT
+            function closeAllScreens() {
+                if (computerScreen) computerScreen.style.display = 'none';
+                if (fullscreenViewer) fullscreenViewer.classList.remove('visible');
+                if (threatModal) threatModal.style.display = 'none';
+                closeFolder(); // Açık klasörü kapat
+                
+                viewerHistory = [];
+                isDesktopViewOpen = false;
+                if (clockIntervalId) {
+                    clearInterval(clockIntervalId);
+                    clockIntervalId = null;
+                }
+
+                // Videoyu durdurmak için içeriği temizle
+                setTimeout(() => {
+                    if (fullscreenContent && fullscreenContent.querySelector('iframe')) {
+                        fullscreenContent.innerHTML = '';
+                    }
+                }, 300);
+            }
+
+            // --- OLAY DİNLEYİCİLERİ ---
+            if (passwordForm) {
+                passwordForm.addEventListener('submit', handleLogin);
+            }
+            if (closeThreatBtn) {
+                closeThreatBtn.addEventListener('click', showDesktop);
+            }
+            if (closeThreatOkBtn) {
+                closeThreatOkBtn.addEventListener('click', showDesktop);
+            }
+            if (exitComputerBtn) {
+                exitComputerBtn.addEventListener('click', closeAllScreens);
+            }
+            if (shutdownBtn) {
+                shutdownBtn.addEventListener('click', closeAllScreens);
+            }
+            if (closeFullscreenBtn) {
+                closeFullscreenBtn.addEventListener('click', navigateBack);
+            }
+            if (closeFolderBtn) {
+                closeFolderBtn.addEventListener('click', closeFolder);
+            }
+
+            if (fullscreenViewer) {
+                fullscreenViewer.addEventListener('click', (event) => {
+                    if (event.target === fullscreenViewer) {
+                        navigateBack();
+                    }
+                });
+            }
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === "Escape") {
+                    if (fullscreenViewer && fullscreenViewer.classList.contains('visible')) {
+                        navigateBack();
+                    } else if (currentOpenFolder) {
+                        closeFolder();
+                    } else if (threatModal && threatModal.style.display === 'flex') {
+                        showDesktop();
+                    } else if (computerScreen && computerScreen.style.display !== 'none') {
+                        closeAllScreens();
+                    }
+                }
             });
 
-            exitComputerBtn.addEventListener('click', closeAllScreens);
-            window.addEventListener('click', (event) => { if (event.target.classList.contains('modal')) { closeAllModals(); } });
-            document.addEventListener('keydown', function(event) { if (event.key === "Escape") { closeAllScreens(); } });
+            // Başlangıçta masaüstü ikonlarını ve ana hotspot'ları başlat
+            initializeHotspots();
+            initializeDesktopIcons();
+
         });
     </script>
-
 </body>
 </html>
