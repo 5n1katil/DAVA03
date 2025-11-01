@@ -841,19 +841,27 @@
         </div>
     </div>
 
-    <!-- YUTEBEK E-SIVRIZEKA (Boş PDF) -->
+    <!-- YUTEBEK E-SIVRIZEKA (PDF GÖRÜNTÜLEYİCİ) -->
     <div class="evidence-source" id="source-yutebek-esivrizeka">
         <div class="pdf-header">
             <div class="pdf-page-nav"><button class="prev-page">&lt; Önceki Sayfa</button></div>
-            <div class="pdf-page-info">Sayfa 1 / 1</div>
+            <div class="pdf-page-info">Sayfa 1 / 2</div>
             <div class="pdf-page-nav"><button class="next-page">Sonraki Sayfa &gt;</button></div>
         </div>
         <div class="pdf-pages-container">
             <img
-                src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc4MDAnIGhlaWdodD0nMTEwMCc+PHJlY3Qgd2lkdGg9JzEwMCUnIGhlaWdodD0nMTAwJScgZmlsbD0nI2ZmZicvPjwvc3ZnPg=="
-                alt="YUTEBEK E-SIVRIZEKA - Boş Sayfa"
+                src="https://i.imgur.com/sHZDiya.jpg"
+                alt="YUTEBEK E-SIVRIZEKA - Sayfa 1"
                 class="pdf-page active"
                 data-page="1"
+                onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+1+Yüklenemedi';"
+            >
+            <img
+                src="https://i.imgur.com/G2wS2ta.jpg"
+                alt="YUTEBEK E-SIVRIZEKA - Sayfa 2"
+                class="pdf-page"
+                data-page="2"
+                onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+2+Yüklenemedi';"
             >
         </div>
     </div>
