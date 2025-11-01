@@ -841,6 +841,23 @@
         </div>
     </div>
 
+    <!-- YUTEBEK E-SIVRIZEKA (Boş PDF) -->
+    <div class="evidence-source" id="source-yutebek-esivrizeka">
+        <div class="pdf-header">
+            <div class="pdf-page-nav"><button class="prev-page">&lt; Önceki Sayfa</button></div>
+            <div class="pdf-page-info">Sayfa 1 / 1</div>
+            <div class="pdf-page-nav"><button class="next-page">Sonraki Sayfa &gt;</button></div>
+        </div>
+        <div class="pdf-pages-container">
+            <img
+                src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc4MDAnIGhlaWdodD0nMTEwMCc+PHJlY3Qgd2lkdGg9JzEwMCUnIGhlaWdodD0nMTAwJScgZmlsbD0nI2ZmZicvPjwvc3ZnPg=="
+                alt="YUTEBEK E-SIVRIZEKA - Boş Sayfa"
+                class="pdf-page active"
+                data-page="1"
+            >
+        </div>
+    </div>
+
     <!-- Gürsoy Holding Mali Raporu -->
     <div class="evidence-source" id="source-gursoy-report">
         <div class="document-modal-content">
@@ -1173,7 +1190,7 @@ TARİH: 20/09/2025 (Gece Yarısı – Otomatik Kayıt)
                       <span>Faruk Alkan Telefon Görüşmesi</span>
                   </div>
                   <!-- İhtarname Dosya İkonu -->
-                  <div class="desktop-icon" data-evidence-target="warning-sk" data-is-document="true">
+                 <div class="desktop-icon" data-evidence-target="warning-sk" data-is-document="true">
                       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#a5f3fc"></path> <path d="M14 2V8H20" stroke="#083344" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M16 13H8" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> <path d="M16 17H8" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> <path d="M10 9H8" stroke="#0e7490" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
                       <span>Selin Karaca-İhtarname</span>
                   </div>
@@ -1181,6 +1198,11 @@ TARİH: 20/09/2025 (Gece Yarısı – Otomatik Kayıt)
                  <div class="desktop-icon" data-evidence-target="yutebek-report" data-is-pdf="true">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#fca5a5"></path> <path d="M14 2V8H20" stroke="#7f1d1d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M10.75 14.5C10.75 13.9477 11.1977 13.5 11.75 13.5H13.25C13.8023 13.5 14.25 13.9477 14.25 14.5V14.5C14.25 15.0523 13.8023 15.5 13.25 15.5H11.75C11.1977 15.5 10.75 15.0523 10.75 14.5V14.5Z" stroke="#991b1b" stroke-width="1.5" stroke-linecap="round"></path> <path d="M11 18.5H13" stroke="#991b1b" stroke-width="1.5" stroke-linecap="round"></path> <path d="M10 11.5H14" stroke="#991b1b" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
                      <span>YUTEBEK-EtikKurulRed.pdf</span>
+                 </div>
+                 <!-- YUTEBEK E-SIVRIZEKA Boş PDF İkonu -->
+                 <div class="desktop-icon" data-evidence-target="yutebek-esivrizeka" data-is-pdf="true">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#fee2e2"></path> <path d="M14 2V8H20" stroke="#991b1b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M10.75 14.5C10.75 13.9477 11.1977 13.5 11.75 13.5H13.25C13.8023 13.5 14.25 13.9477 14.25 14.5V14.5C14.25 15.0523 13.8023 15.5 13.25 15.5H11.75C11.1977 15.5 10.75 15.0523 10.75 14.5V14.5Z" stroke="#b91c1c" stroke-width="1.5" stroke-linecap="round"></path> <path d="M11 18.5H13" stroke="#b91c1c" stroke-width="1.5" stroke-linecap="round"></path> <path d="M10 11.5H14" stroke="#b91c1c" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
+                     <span>YUTEBEK_E-SIVRIZEKA.pdf</span>
                  </div>
                  <!-- Gürsoy Holding Mali Raporu İkonu -->
                  <div class="desktop-icon" data-evidence-target="gursoy-report" data-is-document="true">
