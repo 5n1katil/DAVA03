@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+a<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8" />
@@ -1352,7 +1352,7 @@ TARİH: 20/09/2025 (Gece Yarısı – Otomatik Kayıt)
             </header>
             <div class="encrypted-app-body">
                 <h3>Ebedi Korteks Güvenli Alanı</h3>
-                <p class="helper-text">Erişim için yetkilendirilmiş şifreyi girin.</p>
+                <p class="helper-text login-helper-text">Erişim için yetkilendirilmiş şifreyi girin.</p>
                 <div class="encrypted-app-login" id="encrypted-app-login">
                     <input type="password" id="encrypted-app-password" placeholder="Şifre" autocomplete="off" />
                     <button type="button" id="encrypted-app-submit">Giriş Yap</button>
@@ -1661,6 +1661,7 @@ Geri sayım son kez başladı…
             const encryptedAppError = document.getElementById('encrypted-app-error');
             const encryptedAppContent = document.getElementById('encrypted-app-content');
             const encryptedAppLogin = document.getElementById('encrypted-app-login');
+            const encryptedAppLoginHelperText = encryptedAppModal ? encryptedAppModal.querySelector('.login-helper-text') : null;
 
             // Klasör elementleri
             const folderViewer = document.getElementById('folder-viewer');
@@ -1692,9 +1693,11 @@ Geri sayım son kez başladı…
                 if (encryptedAppUnlocked) {
                     if (encryptedAppContent) encryptedAppContent.classList.add('active');
                     if (encryptedAppLogin) encryptedAppLogin.style.display = 'none';
+                    if (encryptedAppLoginHelperText) encryptedAppLoginHelperText.style.display = 'none';
                 } else {
                     if (encryptedAppContent) encryptedAppContent.classList.remove('active');
                     if (encryptedAppLogin) encryptedAppLogin.style.display = 'flex';
+                    if (encryptedAppLoginHelperText) encryptedAppLoginHelperText.style.display = '';
                     if (encryptedAppPasswordInput) {
                         encryptedAppPasswordInput.value = '';
                         requestAnimationFrame(() => encryptedAppPasswordInput.focus());
@@ -1714,6 +1717,7 @@ Geri sayım son kez başladı…
                 if (!encryptedAppUnlocked) {
                     if (encryptedAppContent) encryptedAppContent.classList.remove('active');
                     if (encryptedAppLogin) encryptedAppLogin.style.display = 'flex';
+                    if (encryptedAppLoginHelperText) encryptedAppLoginHelperText.style.display = '';
                 }
             }
 
@@ -1723,6 +1727,7 @@ Geri sayım son kez başladı…
                 encryptedAppUnlocked = true;
                 encryptedAppLogin.style.display = 'none';
                 encryptedAppContent.classList.add('active');
+                if (encryptedAppLoginHelperText) encryptedAppLoginHelperText.style.display = 'none';
             }
 
             function handleEncryptedAppSubmit() {
