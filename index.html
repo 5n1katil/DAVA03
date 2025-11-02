@@ -1498,6 +1498,7 @@ Geri sayım son kez başladı…
 
             let viewerHistory = [];
             let fullscreenCleanupTimeoutId = null;
+            let detachNestedHotspotListeners = null;
             let isDesktopViewOpen = false;
             let clockIntervalId = null;
             let currentOpenFolder = null; // Hangi klasörün açık olduğunu takip et
@@ -1548,6 +1549,12 @@ Geri sayım son kez başladı…
                         }
 
                         if (isImageOnly) {
+                            fullscreenContent.classList.add('image-only');
+                            if (sourceId.startsWith('source-processor-')) {
+                                fullscreenContent.classList.add('processor-image');
+                            }
+                        } else if (isPdf) {
+                            fullscreenContent.classList.add('pdf-viewer');
                             fullscreenContent.classList.add('image-only');
                             if (sourceId.startsWith('source-processor-')) {
                                 fullscreenContent.classList.add('processor-image');
@@ -1608,6 +1615,11 @@ Geri sayım son kez başladı…
                 if (fullscreenCleanupTimeoutId) {
                     clearTimeout(fullscreenCleanupTimeoutId);
                     fullscreenCleanupTimeoutId = null;
+                }
+
+                if (typeof detachNestedHotspotListeners === 'function') {
+                    detachNestedHotspotListeners();
+                    detachNestedHotspotListeners = null;
                 }
 
                 if (fullscreenContent) {
@@ -1832,12 +1844,18 @@ Geri sayım son kez başladı…
             // DELİL İÇİ HOTSPOT'LAR
             function attachNestedHotspotListeners(container) {
                 if (!container) return;
-                
-                // Tıklama olayını en dış sarmalayıcıya (container) ekle
-                container.addEventListener('click', (e) => {
-                    // Tıklanan elementin `.nested-hotspot` veya onun bir alt elementi olup olmadığını kontrol et
+
+                if (typeof detachNestedHotspotListeners === 'function') {
+                    detachNestedHotspotListeners();
+                    detachNestedHotspotListeners = null;
+                }
+
+                const nestedLayer = container.querySelector('.nested-hotspot-layer');
+                if (!nestedLayer) return;
+
+                const handleNestedHotspotClick = (e) => {
                     const clickedHotspot = e.target.closest('.nested-hotspot');
-                    
+
                     if (clickedHotspot) {
                         e.stopPropagation();
                         const evidenceId = clickedHotspot.getAttribute('data-evidence-id');
@@ -1845,7 +1863,14 @@ Geri sayım son kez başladı…
                             openViewer(`source-${evidenceId}`, true, false, false, false);
                         }
                     }
-                });
+                };
+
+                nestedLayer.addEventListener('click', handleNestedHotspotClick);
+
+                detachNestedHotspotListeners = () => {
+                    nestedLayer.removeEventListener('click', handleNestedHotspotClick);
+                    detachNestedHotspotListeners = null;
+                };
             }
 
 
@@ -1927,6 +1952,10 @@ Geri sayım son kez başladı…
 
                 viewerHistory = [];
                 isDesktopViewOpen = false;
+                if (typeof detachNestedHotspotListeners === 'function') {
+                    detachNestedHotspotListeners();
+                    detachNestedHotspotListeners = null;
+                }
                 if (backFullscreenBtn) {
                     backFullscreenBtn.classList.remove('visible');
                     backFullscreenBtn.setAttribute('aria-hidden', 'true');
