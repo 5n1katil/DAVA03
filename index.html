@@ -1625,8 +1625,9 @@ Geri sayım son kez başladı…
                 const currentViewerState = viewerHistory.pop() || {};
                 const hasPreviousState = viewerHistory.length > 0;
 
-                if (currentViewerState.isVideo && fullscreenContent && hasPreviousState) {
-                    setTimeout(() => { fullscreenContent.innerHTML = ''; }, 300);
+                if (currentViewerState.isVideo && fullscreenContent) {
+                    fullscreenContent.innerHTML = '';
+                    fullscreenContent.className = 'viewer-content';
                 }
 
                 if (hasPreviousState) {
