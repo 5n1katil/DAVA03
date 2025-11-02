@@ -65,7 +65,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.9);
-            z-index: 3000;
+            z-index: 4000; /* Klasör penceresinin üzerinde kalmalı */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -197,7 +197,7 @@
             font-weight: bold;
             transition: color 0.3s, transform 0.3s;
             cursor: pointer;
-            z-index: 3001;
+            z-index: 4001; /* Tam ekran kapatma butonu klasör açıkken de üstte kalır */
         }
         .close-fullscreen:hover {
             color: #ff4d4d;
@@ -356,7 +356,7 @@
         #folder-viewer {
             display: none;
             position: absolute;
-            z-index: 3001; /* Tam ekran görüntüleyicinin hemen altında */
+            z-index: 3001; /* Tam ekran görüntüleyicinin ve kapatma butonunun altında kalır */
             background-color: #0d1117;
             border: 2px solid #60a5fa;
             border-radius: 12px;
