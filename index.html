@@ -1497,6 +1497,7 @@ Geri sayım son kez başladı…
             };
 
             let viewerHistory = [];
+            let fullscreenCleanupTimeoutId = null;
             let isDesktopViewOpen = false;
             let clockIntervalId = null;
             let currentOpenFolder = null; // Hangi klasörün açık olduğunu takip et
@@ -1523,6 +1524,11 @@ Geri sayım son kez başladı…
 
             // GÖRÜNTÜLEYİCİ FONKSİYONLARI (KAYIP OLANLAR EKLENDİ)
             function renderViewerContent(sourceId, isImageOnly, isVideo = false, isPdf = false, isDocument = false) {
+                if (fullscreenCleanupTimeoutId) {
+                    clearTimeout(fullscreenCleanupTimeoutId);
+                    fullscreenCleanupTimeoutId = null;
+                }
+
                 const sourceElement = document.getElementById(sourceId);
                 if (sourceElement && fullscreenContent) {
                     fullscreenContent.innerHTML = ''; // Önce temizle
@@ -1596,6 +1602,12 @@ Geri sayım son kez başladı…
                 if (backFullscreenBtn) {
                     backFullscreenBtn.classList.remove('visible');
                     backFullscreenBtn.setAttribute('aria-hidden', 'true');
+                    backFullscreenBtn.blur();
+                }
+
+                if (fullscreenCleanupTimeoutId) {
+                    clearTimeout(fullscreenCleanupTimeoutId);
+                    fullscreenCleanupTimeoutId = null;
                 }
 
                 if (fullscreenContent) {
@@ -1606,7 +1618,10 @@ Geri sayım son kez başladı…
                     };
 
                     if (hasIframe) {
-                        setTimeout(clearContent, 300);
+                        fullscreenCleanupTimeoutId = setTimeout(() => {
+                            clearContent();
+                            fullscreenCleanupTimeoutId = null;
+                        }, 300);
                     } else {
                         clearContent();
                     }
@@ -1622,10 +1637,20 @@ Geri sayım son kez başladı…
             }
 
             function navigateBack() {
-                const currentViewerState = viewerHistory.pop() || {};
+                if (viewerHistory.length === 0) {
+                    closeViewer();
+                    return;
+                }
+
+                const currentViewerState = viewerHistory.pop() || null;
                 const hasPreviousState = viewerHistory.length > 0;
 
-                if (currentViewerState.isVideo && fullscreenContent) {
+                if (fullscreenCleanupTimeoutId) {
+                    clearTimeout(fullscreenCleanupTimeoutId);
+                    fullscreenCleanupTimeoutId = null;
+                }
+
+                if (currentViewerState && currentViewerState.isVideo && fullscreenContent) {
                     fullscreenContent.innerHTML = '';
                     fullscreenContent.className = 'viewer-content';
                 }
@@ -1635,6 +1660,10 @@ Geri sayım son kez başladı…
                     renderViewerContent(previousState.sourceId, previousState.isImageOnly, previousState.isVideo, previousState.isPdf, previousState.isDocument);
                 } else {
                     closeViewer();
+                }
+
+                if (backFullscreenBtn) {
+                    backFullscreenBtn.blur();
                 }
             }
             // --- GÖRÜNTÜLEYİCİ FONKSİYONLARI SONU ---
@@ -1901,20 +1930,30 @@ Geri sayım son kez başladı…
                 if (backFullscreenBtn) {
                     backFullscreenBtn.classList.remove('visible');
                     backFullscreenBtn.setAttribute('aria-hidden', 'true');
+                    backFullscreenBtn.blur();
                 }
                 if (clockIntervalId) {
                     clearInterval(clockIntervalId);
                     clockIntervalId = null;
                 }
 
+                if (fullscreenCleanupTimeoutId) {
+                    clearTimeout(fullscreenCleanupTimeoutId);
+                    fullscreenCleanupTimeoutId = null;
+                }
+
                 if (fullscreenContent) {
+                    const hasIframe = fullscreenContent.querySelector('iframe');
                     const clearContent = () => {
                         fullscreenContent.innerHTML = '';
                         fullscreenContent.className = 'viewer-content';
                     };
 
-                    if (fullscreenContent.querySelector('iframe')) {
-                        setTimeout(clearContent, 300);
+                    if (hasIframe) {
+                        fullscreenCleanupTimeoutId = setTimeout(() => {
+                            clearContent();
+                            fullscreenCleanupTimeoutId = null;
+                        }, 300);
                     } else {
                         clearContent();
                     }
@@ -1940,6 +1979,7 @@ Geri sayım son kez başladı…
             if (closeFullscreenBtn) {
                 closeFullscreenBtn.addEventListener('click', (event) => {
                     event.stopPropagation();
+
                     closeViewer();
                 });
             }
