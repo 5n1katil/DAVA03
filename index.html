@@ -204,6 +204,36 @@
             transform: rotate(90deg);
         }
 
+        .back-fullscreen {
+            position: fixed;
+            top: 24px;
+            left: 30px;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 18px;
+            border-radius: 999px;
+            border: 1px solid #60a5fa;
+            background: rgba(10, 20, 35, 0.85);
+            color: #60a5fa;
+            font-size: 14px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            z-index: 4001;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s;
+        }
+        .back-fullscreen.visible {
+            display: inline-flex;
+        }
+        .back-fullscreen:hover,
+        .back-fullscreen:focus {
+            background-color: #60a5fa;
+            color: #0b1220;
+            transform: translateX(-2px);
+            outline: none;
+        }
+
         @keyframes zoomInEffect {
             from { transform: scale(0.7); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
@@ -1173,6 +1203,9 @@ TARİH: 20/09/2025 (Gece Yarısı – Otomatik Kayıt)
 
     <!-- Yeni Tam Ekran Delil Görüntüleyici -->
     <div id="fullscreen-viewer">
+        <button type="button" class="back-fullscreen" aria-hidden="true">
+            &#8592; Geri
+        </button>
         <span class="close-fullscreen">&times;</span>
         <div class="viewer-content"></div>
     </div>
@@ -1447,6 +1480,7 @@ Geri sayım son kez başladı…
             const fullscreenViewer = document.getElementById('fullscreen-viewer');
             const fullscreenContent = fullscreenViewer ? fullscreenViewer.querySelector('.viewer-content') : null;
             const closeFullscreenBtn = fullscreenViewer ? fullscreenViewer.querySelector('.close-fullscreen') : null;
+            const backFullscreenBtn = fullscreenViewer ? fullscreenViewer.querySelector('.back-fullscreen') : null;
 
             // Klasör elementleri
             const folderViewer = document.getElementById('folder-viewer');
@@ -1536,7 +1570,17 @@ Geri sayım son kez başladı…
                         }
                         attachNestedHotspotListeners(fullscreenContent);
                     }
-                    
+
+                    if (backFullscreenBtn) {
+                        if (viewerHistory.length > 1) {
+                            backFullscreenBtn.classList.add('visible');
+                            backFullscreenBtn.setAttribute('aria-hidden', 'false');
+                        } else {
+                            backFullscreenBtn.classList.remove('visible');
+                            backFullscreenBtn.setAttribute('aria-hidden', 'true');
+                        }
+                    }
+
                     fullscreenViewer.classList.add('visible');
                 }
             }
@@ -1545,23 +1589,51 @@ Geri sayım son kez başladı…
                 viewerHistory.push({ sourceId, isImageOnly, isVideo, isPdf, isDocument });
                 renderViewerContent(sourceId, isImageOnly, isVideo, isPdf, isDocument);
             }
-            
-            function navigateBack() {
-                const currentViewerState = viewerHistory.pop() || {};
 
-                if (currentViewerState.isVideo && fullscreenContent) {
-                     setTimeout(() => { fullscreenContent.innerHTML = ''; }, 300);
+            function closeViewer() {
+                viewerHistory = [];
+
+                if (backFullscreenBtn) {
+                    backFullscreenBtn.classList.remove('visible');
+                    backFullscreenBtn.setAttribute('aria-hidden', 'true');
                 }
 
-                if (viewerHistory.length > 0) {
+                if (fullscreenContent) {
+                    const hasIframe = fullscreenContent.querySelector('iframe');
+                    const clearContent = () => {
+                        fullscreenContent.innerHTML = '';
+                        fullscreenContent.className = 'viewer-content';
+                    };
+
+                    if (hasIframe) {
+                        setTimeout(clearContent, 300);
+                    } else {
+                        clearContent();
+                    }
+                }
+
+                if (isDesktopViewOpen || currentOpenFolder) {
+                    if (fullscreenViewer) {
+                        fullscreenViewer.classList.remove('visible');
+                    }
+                } else {
+                    closeAllScreens();
+                }
+            }
+
+            function navigateBack() {
+                const currentViewerState = viewerHistory.pop() || {};
+                const hasPreviousState = viewerHistory.length > 0;
+
+                if (currentViewerState.isVideo && fullscreenContent && hasPreviousState) {
+                    setTimeout(() => { fullscreenContent.innerHTML = ''; }, 300);
+                }
+
+                if (hasPreviousState) {
                     const previousState = viewerHistory[viewerHistory.length - 1];
                     renderViewerContent(previousState.sourceId, previousState.isImageOnly, previousState.isVideo, previousState.isPdf, previousState.isDocument);
                 } else {
-                    if (isDesktopViewOpen || currentOpenFolder) {
-                        fullscreenViewer.classList.remove('visible');
-                    } else {
-                        closeAllScreens();
-                    }
+                    closeViewer();
                 }
             }
             // --- GÖRÜNTÜLEYİCİ FONKSİYONLARI SONU ---
@@ -1822,20 +1894,30 @@ Geri sayım son kez başladı…
                 if (fullscreenViewer) fullscreenViewer.classList.remove('visible');
                 if (threatModal) threatModal.style.display = 'none';
                 closeFolder(); // Açık klasörü kapat
-                
+
                 viewerHistory = [];
                 isDesktopViewOpen = false;
+                if (backFullscreenBtn) {
+                    backFullscreenBtn.classList.remove('visible');
+                    backFullscreenBtn.setAttribute('aria-hidden', 'true');
+                }
                 if (clockIntervalId) {
                     clearInterval(clockIntervalId);
                     clockIntervalId = null;
                 }
 
-                // Videoyu durdurmak için içeriği temizle
-                setTimeout(() => {
-                    if (fullscreenContent && fullscreenContent.querySelector('iframe')) {
+                if (fullscreenContent) {
+                    const clearContent = () => {
                         fullscreenContent.innerHTML = '';
+                        fullscreenContent.className = 'viewer-content';
+                    };
+
+                    if (fullscreenContent.querySelector('iframe')) {
+                        setTimeout(clearContent, 300);
+                    } else {
+                        clearContent();
                     }
-                }, 300);
+                }
             }
 
             // --- OLAY DİNLEYİCİLERİ ---
@@ -1855,7 +1937,17 @@ Geri sayım son kez başladı…
                 shutdownBtn.addEventListener('click', closeAllScreens);
             }
             if (closeFullscreenBtn) {
-                closeFullscreenBtn.addEventListener('click', navigateBack);
+                closeFullscreenBtn.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    closeViewer();
+                });
+            }
+            if (backFullscreenBtn) {
+                backFullscreenBtn.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    navigateBack();
+                });
             }
             if (closeFolderBtn) {
                 closeFolderBtn.addEventListener('click', closeFolder);
@@ -1864,7 +1956,11 @@ Geri sayım son kez başladı…
             if (fullscreenViewer) {
                 fullscreenViewer.addEventListener('click', (event) => {
                     if (event.target === fullscreenViewer) {
-                        navigateBack();
+                        if (viewerHistory.length > 1) {
+                            navigateBack();
+                        } else {
+                            closeViewer();
+                        }
                     }
                 });
             }
@@ -1872,7 +1968,11 @@ Geri sayım son kez başladı…
             document.addEventListener('keydown', function(event) {
                 if (event.key === "Escape") {
                     if (fullscreenViewer && fullscreenViewer.classList.contains('visible')) {
-                        navigateBack();
+                        if (viewerHistory.length > 1) {
+                            navigateBack();
+                        } else {
+                            closeViewer();
+                        }
                     } else if (currentOpenFolder) {
                         closeFolder();
                     } else if (threatModal && threatModal.style.display === 'flex') {
