@@ -137,6 +137,37 @@
             box-shadow: 0 0 25px rgba(96, 165, 250, .95);
         }
 
+        .viewer-content.equation-board {
+            background: none;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            width: auto;
+            height: auto;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow: visible;
+        }
+        .viewer-content.equation-board .nested-evidence-container {
+            display: inline-block;
+            position: relative;
+            border: 2px solid #ffe352;
+            border-radius: 8px;
+            box-shadow: 0 0 25px rgba(255, 227, 82, .95);
+            overflow: hidden;
+            max-height: 90vh;
+            max-width: 90vw;
+        }
+        .viewer-content.equation-board .nested-evidence-container img {
+            display: block;
+            max-height: 90vh;
+            width: 100%;
+            margin-bottom: 0;
+        }
+        .viewer-content.equation-board .nested-hotspot-layer {
+            border-radius: 8px;
+        }
+
         /* Video oynatıcı container stili */
         .viewer-content.video-container {
             background: #000;
@@ -1488,6 +1519,10 @@ Geri sayım son kez başladı…
                             setTimeout(() => initializePdfViewer(currentContainer), 100);
                         } else if (isDocument) {
                             fullscreenContent.classList.add('document-modal-content');
+                        }
+
+                        if (sourceId === 'source-equation') {
+                            fullscreenContent.classList.add('equation-board');
                         }
                     }
 
