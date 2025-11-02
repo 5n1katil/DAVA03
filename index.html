@@ -1784,22 +1784,15 @@ Geri sayım son kez başladı…
                             fullscreenContent.appendChild(clonedNode.firstChild);
                         }
 
-                        if (isImageOnly) {
-                            fullscreenContent.classList.add('image-only');
-                            if (sourceId.startsWith('source-processor-')) {
-                                fullscreenContent.classList.add('processor-image');
-                            }
-                        } else if (isPdf) {
+                        if (isPdf) {
                             fullscreenContent.classList.add('pdf-viewer');
-                            fullscreenContent.classList.add('image-only');
-                            if (sourceId.startsWith('source-processor-')) {
-                                fullscreenContent.classList.add('processor-image');
-                            }
-                        } else if (isPdf) {
-                            fullscreenContent.classList.add('pdf-viewer');
-                            // PDF Görüntüleyiciyi Başlat
                             const currentContainer = fullscreenContent;
-                            setTimeout(() => initializePdfViewer(currentContainer), 100);
+                            requestAnimationFrame(() => initializePdfViewer(currentContainer));
+                        } else if (isImageOnly) {
+                            fullscreenContent.classList.add('image-only');
+                            if (sourceId.startsWith('source-processor-')) {
+                                fullscreenContent.classList.add('processor-image');
+                            }
                         } else if (isDocument) {
                             fullscreenContent.classList.add('document-modal-content');
                         }
@@ -2133,13 +2126,15 @@ Geri sayım son kez başladı…
                     if (activePage) {
                         activePage.classList.add('active');
                     }
-                    
+
                     pageInfo.textContent = `Sayfa ${currentPage} / ${totalPages}`;
                     prevButton.disabled = (currentPage === 1);
                     nextButton.disabled = (currentPage === totalPages);
-                    
-                    // Sayfa değiştiğinde scroll'u en üste al
+
+                    // Sayfa değiştiğinde varsayılan yakınlaştırma ve konuma dön
+                    pagesContainer.classList.remove('zoomed-in');
                     pagesContainer.scrollTop = 0;
+                    pagesContainer.scrollLeft = 0;
                 }
 
                 prevButton.addEventListener('click', (e) => {
@@ -2159,21 +2154,22 @@ Geri sayım son kez başladı…
                 });
                 
                 // GÜVENLİ ZOOM FONKSİYONU
-                // Tıklama olayını en dış sarmalayıcıya (container) ekle
-                container.addEventListener('click', (e) => {
-                    // Tıklanan elementin `.pdf-page` veya onun bir alt elementi olup olmadığını kontrol et
+                const handleZoomToggle = (e) => {
                     const clickedPage = e.target.closest('.pdf-page');
-                    
-                    if (clickedPage && pagesContainer) {
+
+                    if (clickedPage) {
                         e.stopPropagation();
                         pagesContainer.classList.toggle('zoomed-in');
-                        
-                        // Zoom yapıldığında scroll'u resetle (gerekirse)
+
+                        // Zoom kapatıldığında başlangıç konumuna dön
                         if (!pagesContainer.classList.contains('zoomed-in')) {
                             pagesContainer.scrollTop = 0;
+                            pagesContainer.scrollLeft = 0;
                         }
                     }
-                });
+                };
+
+                pagesContainer.addEventListener('click', handleZoomToggle);
 
                 updatePage(); // Başlangıçta ilk sayfayı göster
             }
@@ -2199,6 +2195,7 @@ Geri sayım son kez başladı…
                     detachNestedHotspotListeners();
                     detachNestedHotspotListeners = null;
                 }
+
                 if (backFullscreenBtn) {
                     backFullscreenBtn.classList.remove('visible');
                     backFullscreenBtn.setAttribute('aria-hidden', 'true');
