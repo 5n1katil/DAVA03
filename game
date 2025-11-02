@@ -688,26 +688,26 @@
             <img src="https://i.imgur.com/G0OXIXn.png" alt="Ebedi Korteks Projesi Şeması Yakın Çekim" onerror="this.src='https://placehold.co/1024x1024/1a1a1a/e0e0e0?text=Delil+Yüklenemedi';">
             
             <!-- İnteraktif SVG Katmanı -->
-            <svg class="nested-hotspot-layer" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1024 1024">
+            <svg class="nested-hotspot-layer" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1536 1024">
                 <!-- İşlemci 1 (Sol Üst) -->
                 <g class="nested-hotspot" data-evidence-id="processor-1">
-                    <rect x="110" y="112" width="230" height="230"></rect>
-                    <circle class="pulsing-dot" cx="225" cy="227"></circle>
+                    <rect x="243.51" y="153.50" width="118.28" height="118.28"></rect>
+                    <circle class="pulsing-dot" cx="302.65" cy="212.64"></circle>
                 </g>
                 <!-- İşlemci 2 (Sağ Üst) -->
                 <g class="nested-hotspot" data-evidence-id="processor-2">
-                    <rect x="685" y="112" width="230" height="230"></rect>
-                    <circle class="pulsing-dot" cx="800" cy="227"></circle>
+                    <rect x="1165.24" y="155.54" width="118.28" height="118.28"></rect>
+                    <circle class="pulsing-dot" cx="1224.38" cy="214.68"></circle>
                 </g>
                 <!-- İşlemci 3 (Sol Alt) -->
                 <g class="nested-hotspot" data-evidence-id="processor-3">
-                    <rect x="110" y="668" width="230" height="230"></rect>
-                    <circle class="pulsing-dot" cx="225" cy="783"></circle>
+                    <rect x="214.96" y="722.45" width="118.28" height="118.28"></rect>
+                    <circle class="pulsing-dot" cx="274.10" cy="781.59"></circle>
                 </g>
                 <!-- İşlemci 4 (Sağ Alt) -->
                 <g class="nested-hotspot" data-evidence-id="processor-4">
-                    <rect x="685" y="668" width="230" height="230"></rect>
-                    <circle class="pulsing-dot" cx="800" cy="783"></circle>
+                    <rect x="1197.87" y="722.45" width="126.43" height="118.28"></rect>
+                    <circle class="pulsing-dot" cx="1261.09" cy="781.59"></circle>
                 </g>
             </svg>
         </div>
