@@ -43,6 +43,21 @@
             animation-play-state: paused;
             opacity: 0;
         }
+        /* Not defteri/mektup delili için mavi parıltı */
+        #hotspot-notebook .hotspot-polygon {
+            stroke: #60a5fa;
+        }
+        #hotspot-notebook:hover .hotspot-polygon {
+            stroke-opacity: 0.95;
+            fill: rgba(96, 165, 250, 0.22);
+            filter: drop-shadow(0 0 18px rgba(96, 165, 250, 0.95)) drop-shadow(0 0 38px rgba(125, 187, 255, 0.9)) blur(10px);
+        }
+        #hotspot-notebook .pulsing-dot {
+            fill: #60a5fa;
+        }
+        .hotspots-ready #hotspot-notebook .pulsing-dot {
+            animation: pulseScaleGlowBlue 1.9s ease-in-out infinite;
+        }
         @keyframes pulseScaleGlow {
             0%, 100% {
                 transform: scale(1);
@@ -51,6 +66,16 @@
             50% {
                 transform: scale(1.45);
                 filter: drop-shadow(0 0 10px #ffe352) drop-shadow(0 0 26px rgba(255, 227, 82, .95));
+            }
+        }
+        @keyframes pulseScaleGlowBlue {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 6px #60a5fa) drop-shadow(0 0 14px rgba(96, 165, 250, .55));
+            }
+            50% {
+                transform: scale(1.45);
+                filter: drop-shadow(0 0 10px #60a5fa) drop-shadow(0 0 26px rgba(96, 165, 250, .95));
             }
         }
 
@@ -78,6 +103,7 @@
             pointer-events: auto;
         }
         #fullscreen-viewer.visible .viewer-content {
+
             animation: zoomInEffect 0.4s ease-out;
         }
         .viewer-content {
