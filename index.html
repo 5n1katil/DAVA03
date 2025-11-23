@@ -501,13 +501,14 @@
             display: flex;
         }
         .encrypted-app-videos {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
+            display: flex;
+            justify-content: center;
         }
         .encrypted-app-videos iframe {
             width: 100%;
-            min-height: 220px;
+            max-width: 960px;
+            aspect-ratio: 16 / 9;
+            height: auto;
             border: 1px solid rgba(96, 165, 250, 0.4);
             border-radius: 12px;
             box-shadow: 0 12px 25px rgba(30, 64, 175, 0.4);
