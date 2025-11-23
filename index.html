@@ -820,6 +820,13 @@
             min-height: 0; /* Flexbox kaydırma düzeltmesi */
             text-align: center; /* Resmi ortala */
         }
+        .pdf-viewer.notebook-viewer .pdf-pages-container {
+            border: 2px solid #ffe352;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 0 24px rgba(255, 227, 82, 0.9);
+            background: rgba(10,10,10,0.6);
+        }
         .pdf-pages-container .pdf-page {
             display: none; /* JS ile yönetilecek */
             max-width: 100%;
@@ -832,9 +839,29 @@
         .pdf-pages-container .pdf-page.active {
             display: inline-block;
         }
+        .pdf-viewer.notebook-viewer .pdf-page {
+            border: 2px solid #ffe352;
+            box-shadow: 0 0 22px rgba(255, 227, 82, 0.9);
+            border-radius: 6px;
+            background: #0a0a0a;
+        }
         .pdf-pages-container.zoomed-in .pdf-page.active {
             max-width: none; /* Orijinal boyuta izin ver */
             cursor: zoom-out;
+        }
+        .notebook-viewer .pdf-header {
+            margin-bottom: 12px;
+        }
+        .notebook-viewer .pdf-page-nav button {
+            background: linear-gradient(135deg, #ffe352, #facc15);
+            border: 1px solid #facc15;
+            color: #111827;
+            font-weight: 700;
+            box-shadow: 0 0 15px rgba(250, 204, 21, 0.65);
+        }
+        .notebook-viewer .pdf-page-info {
+            color: #ffe352;
+            letter-spacing: 0.08em;
         }
         /* ------------------------------------------- */
 
@@ -869,6 +896,10 @@
             <g class="hotspot" id="hotspot-computer" data-modal="modal-computer">
                 <polygon class="hotspot-polygon" points="0.56,383.56 183.18,378.41 193.01,510.61 1.97,541.51"></polygon>
                 <circle class="pulsing-dot" cx="94.68" cy="453.52"></circle>
+            </g>
+            <g class="hotspot" id="hotspot-notebook" data-modal="modal-notebook">
+                <polygon class="hotspot-polygon" points="102.00,638.00 227.00,628.00 222.00,634.00 117.00,668.00"></polygon>
+                <circle class="pulsing-dot" cx="150.00" cy="640.00"></circle>
             </g>
         </svg>
     </div>
@@ -929,6 +960,31 @@
     </div>
     <div class="evidence-source" id="source-processor-4">
         <img src="https://i.imgur.com/0H2x0eB.png" alt="IV. İşlemci" onerror="this.src='https://placehold.co/800x800/1a1a1a/e0e0e0?text=Delil+Yüklenemedi';">
+    </div>
+
+    <!-- Not Defteri / Mektup Delili -->
+    <div class="evidence-source" id="source-notebook">
+        <div class="pdf-header">
+            <div class="pdf-page-nav"><button class="prev-page">&lt; Önceki Sayfa</button></div>
+            <div class="pdf-page-info">Sayfa 1 / 2</div>
+            <div class="pdf-page-nav"><button class="next-page">Sonraki Sayfa &gt;</button></div>
+        </div>
+        <div class="pdf-pages-container">
+            <img
+                src="https://imgur.com/ucAlrFY.jpg"
+                alt="Not Defteri - Sayfa 1"
+                class="pdf-page active"
+                data-page="1"
+                onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+1+Yüklenemedi';"
+            >
+            <img
+                src="https://imgur.com/egkt2o3.jpg"
+                alt="Not Defteri - Sayfa 2"
+                class="pdf-page"
+                data-page="2"
+                onerror="this.src='https://placehold.co/800x1100/1a1a1a/e0e0e0?text=Sayfa+2+Yüklenemedi';"
+            >
+        </div>
     </div>
 
     <!-- Şüpheliler Dosyası İçeriği -->
@@ -1797,6 +1853,9 @@ Geri sayım son kez başladı…
 
                         if (isPdf) {
                             fullscreenContent.classList.add('pdf-viewer');
+                            if (sourceId === 'source-notebook') {
+                                fullscreenContent.classList.add('notebook-viewer');
+                            }
                             const currentContainer = fullscreenContent;
                             requestAnimationFrame(() => initializePdfViewer(currentContainer));
                         } else if (isImageOnly) {
@@ -1952,9 +2011,13 @@ Geri sayım son kez başladı…
                             const sourceId = modalId.replace('modal-', 'source-');
                             
                             // DÜZELTME: 'hotspot-equation' artık 'image-only' değil.
-                            const isImageOnly = ['hotspot-periodic', 'hotspot-chess', 'hotspot-photo'].includes(hotspot.id);
-                            
-                            openViewer(sourceId, isImageOnly, false, false, false);
+                            const imageOnlyHotspots = ['hotspot-periodic', 'hotspot-chess', 'hotspot-photo'];
+                            const pdfHotspots = ['hotspot-notebook'];
+
+                            const isImageOnly = imageOnlyHotspots.includes(hotspot.id);
+                            const isPdf = pdfHotspots.includes(hotspot.id);
+
+                            openViewer(sourceId, isImageOnly, false, isPdf, false);
                         }
                     });
                 });
